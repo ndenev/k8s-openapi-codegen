@@ -1,9 +1,8 @@
 extern crate base64;
-extern crate chrono;
-extern crate http;
-#[cfg(feature = "reqwest")] extern crate reqwest;
+pub extern crate chrono;
+pub extern crate http;
 extern crate serde;
-extern crate serde_json;
+pub extern crate serde_json;
 extern crate url;
 
 /// A wrapper around a list of bytes.
@@ -104,93 +103,84 @@ impl serde::Serialize for IntOrString {
     }
 }
 
-/// An interface for a synchronous Kubernetes API client.
-pub trait Client {
-    /// The type of HTTP response returned by this client.
-    type Response: Response;
-
-    /// The type of errors returned by this client.
-    type Error;
-
-    /// The base URL to which all API paths will be appended.
-    fn base_url(&self) -> &url::Url;
-
-    /// Executes an HTTP DELETE request against the given URL.
-    fn delete(&self, url: url::Url) -> Result<Self::Response, Self::Error>;
-
-    /// Executes an HTTP GET request against the given URL.
-    fn get(&self, url: url::Url) -> Result<Self::Response, Self::Error>;
-
-    /// Executes an HTTP PATCH request against the given URL with the given body serialized to JSON.
-    fn patch<B>(&self, url: url::Url, body: &B) -> Result<Self::Response, Self::Error> where B: serde::Serialize;
-
-    /// Executes an HTTP POST request against the given URL with the given body serialized to JSON.
-    fn post<B>(&self, url: url::Url, body: &B) -> Result<Self::Response, Self::Error> where B: serde::Serialize;
-
-    /// Executes an HTTP PUT request against the given URL with the given body serialized to JSON.
-    fn put<B>(&self, url: url::Url, body: &B) -> Result<Self::Response, Self::Error> where B: serde::Serialize;
+/// A trait implemented by all response types corresponding to Kubernetes API functions.
+pub trait Response<'a>: Sized {
+    /// Tries to parse the response from the given status code and response body.
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ResponseError>;
 }
 
-/// An interface of an HTTP response returned by [`Client`]
-pub trait Response: std::io::Read {
-    /// Gets the HTTP status code of this response.
-    fn status_code(&self) -> http::StatusCode;
-}
-
-#[cfg(feature = "reqwest")]
-impl Response for reqwest::Response {
-    fn status_code(&self) -> http::StatusCode {
-        let status_code = self.status();
-        match http::StatusCode::from_u16(status_code.as_u16()) {
-            Ok(status_code) => status_code,
-            Err(_) => panic!("could not convert {} to http::StatusCode", status_code),
-        }
-    }
-}
-
-/// The type of errors returned by the Kubernetes API functions.
+/// The type of errors returned by the Kubernetes API functions that prepare the HTTP request.
 #[derive(Debug)]
-pub enum Error<CE> {
-    /// An error from the HTTP client.
-    Client(CE),
+pub enum RequestError {
+    /// An error from preparing an HTTP request.
+    Http(http::Error),
 
-    /// An error while reading the HTTP response.
-    IO(std::io::Error),
-
-    /// An error while deserializing the HTTP response as a JSON value.
-    JSON(serde_json::Error),
-
-    /// An error while constructing the HTTP request URL.
-    URL(url::ParseError),
+    /// An error while serializing a value into the JSON body of an HTTP request.
+    Json(serde_json::Error),
 }
 
-impl<CE> std::fmt::Display for Error<CE> where CE: std::error::Error {
+impl std::fmt::Display for RequestError {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self {
-            Error::Client(err) => write!(f, "{}", err),
-            Error::IO(err) => write!(f, "{}", err),
-            Error::JSON(err) => write!(f, "{}", err),
-            Error::URL(err) => write!(f, "{}", err),
+            RequestError::Http(err) => write!(f, "{}", err),
+            RequestError::Json(err) => write!(f, "{}", err),
         }
     }
 }
 
-impl<CE> std::error::Error for Error<CE> where CE: std::error::Error {
+impl std::error::Error for RequestError {
     fn description(&self) -> &str {
         match self {
-            Error::Client(err) => std::error::Error::description(err),
-            Error::IO(err) => std::error::Error::description(err),
-            Error::JSON(err) => std::error::Error::description(err),
-            Error::URL(err) => std::error::Error::description(err),
+            RequestError::Http(err) => err.description(),
+            RequestError::Json(err) => err.description(),
         }
     }
 
     fn cause(&self) -> Option<&std::error::Error> {
         match self {
-            Error::Client(err) => Some(err),
-            Error::IO(err) => Some(err),
-            Error::JSON(err) => Some(err),
-            Error::URL(err) => Some(err),
+            RequestError::Http(err) => Some(err),
+            RequestError::Json(err) => Some(err),
+        }
+    }
+}
+
+/// The type of errors returned by the Kubernetes API functions that parse the HTTP response.
+#[derive(Debug)]
+pub enum ResponseError {
+    /// An error from deserializing the HTTP response, indicating more data is needed from the response to complete deserialization.
+    NeedMoreData,
+
+    /// An error while deserializing the HTTP response as a JSON value.
+    Json(serde_json::Error),
+
+    /// An error while deserializing the HTTP response as a string, indicating that the response data is not UTF-8.
+    Utf8(std::str::Utf8Error),
+}
+
+impl std::fmt::Display for ResponseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            ResponseError::NeedMoreData => write!(f, "need more response data"),
+            ResponseError::Json(err) => write!(f, "{}", err),
+            ResponseError::Utf8(err) => write!(f, "{}", err),
+        }
+    }
+}
+
+impl std::error::Error for ResponseError {
+    fn description(&self) -> &str {
+        match self {
+            ResponseError::NeedMoreData => "need more response data",
+            ResponseError::Json(err) => err.description(),
+            ResponseError::Utf8(err) => err.description(),
+        }
+    }
+
+    fn cause(&self) -> Option<&std::error::Error> {
+        match self {
+            ResponseError::NeedMoreData => None,
+            ResponseError::Json(err) => Some(err),
+            ResponseError::Utf8(err) => Some(err),
         }
     }
 }

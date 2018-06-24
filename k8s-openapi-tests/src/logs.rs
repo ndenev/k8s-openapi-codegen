@@ -10,21 +10,19 @@ fn get() {
 
 	let client = ::Client::new().expect("couldn't create client");
 
-	#[cfg(feature = "v1_7")] let pod_list =
-		api::Pod::list_core_v1_namespaced_pod(
-			&client, "kube-system",
-			None, None, None, None, None, None, None)
-		.expect("couldn't list pods");
-	#[cfg(not(feature = "v1_7"))] let pod_list =
-		api::Pod::list_core_v1_namespaced_pod(
-			&client, "kube-system",
-			None, None, None, None, None, None, None, None, None)
-		.expect("couldn't list pods");
-	let pod_list = match pod_list {
-		#[cfg(feature = "v1_7")] api::ListCoreV1NamespacedPodResponse::Ok(pod_list) => pod_list,
-		#[cfg(not(feature = "v1_7"))] api::ListCoreV1NamespacedPodResponse::Ok(pod_list) => pod_list,
-		other => panic!("couldn't list pods: {:?}", other),
-	};
+	#[cfg(feature = "v1_7")] let request =
+		api::Pod::list_core_v1_namespaced_pod("kube-system", None, None, None, None, None, None, None);
+	#[cfg(not(feature = "v1_7"))] let request =
+		api::Pod::list_core_v1_namespaced_pod("kube-system", None, None, None, None, None, None, None, None, None);
+	let request = request.expect("couldn't list pods");
+	let response = client.execute(request).expect("couldn't list pods");;
+	let pod_list =
+		::get_single_value(response, |response, _, _| match response {
+			Ok(api::ListCoreV1NamespacedPodResponse::Ok(pod_list)) => Ok(::SingleValueResult::GotValue(pod_list)),
+			Ok(other) => Err(format!("{:?}", other).into()),
+			Err(::k8s_openapi::ResponseError::NeedMoreData) => Ok(::SingleValueResult::NeedMoreData),
+			Err(err) => Err(err.into()),
+		}).expect("couldn't list pods");
 
 	let addon_manager_pod =
 		pod_list
@@ -37,18 +35,25 @@ fn get() {
 		.metadata.as_ref().expect("couldn't get addon-manager pod metadata")
 		.name.as_ref().expect("couldn't get addon-manager pod name");
 
-	let addon_manager_logs =
+	let request =
 		api::Pod::read_core_v1_namespaced_pod_log(
-			&client,
-			addon_manager_pod_name, "kube-system", Some("kube-addon-manager"), None, Some(4096), None, None, None, None, None)
+			addon_manager_pod_name, "kube-system", Some("kube-addon-manager"), None, None, None, None, None, None, None)
 		.expect("couldn't get addon-manager pod logs");
-	let mut addon_manager_logs = match addon_manager_logs {
-		api::ReadCoreV1NamespacedPodLogResponse::Ok(logs) => logs,
-		other => panic!("couldn't get addon-manager pod logs: {:?}", other),
-	};
-	let addon_manager_logs_first_line =
-		addon_manager_logs
-		.next().expect("addon-manager pod has no logs")
-		.expect("couldn't get first line of addon-manager pod logs");
-	assert!(addon_manager_logs_first_line.contains("INFO: == Kubernetes addon manager started at"), "{}", addon_manager_logs_first_line);
+	let response = client.execute(request).expect("couldn't get addon-manager pod logs");
+	get_borrowed_value!(response, |response, _, _| match response {
+		Ok(api::ReadCoreV1NamespacedPodLogResponse::Ok(addon_manager_logs)) =>
+			if addon_manager_logs.contains("INFO: == Kubernetes addon manager started at") {
+				Ok(::SingleValueResult::GotValue(()))
+			}
+			else if addon_manager_logs.len() > 4096 {
+				Err(format!("did not find expected text in addon-manager pod logs: {}", addon_manager_logs).into())
+			}
+			else {
+				Ok(::SingleValueResult::NeedMoreData)
+			},
+
+		Ok(other) => Err(format!("{:?}", other).into()),
+		Err(::k8s_openapi::ResponseError::NeedMoreData) => unreachable!(),
+		Err(err) => Err(err.into()),
+	}).expect("couldn't get addon-manager pod logs");
 }

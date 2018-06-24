@@ -62,13 +62,24 @@ fn create() {
 		..Default::default()
 	};
 
-	let job = batch::Job::create_batch_v1_namespaced_job(&client, "default", &job, None).expect("couldn't create job");
-	let job: batch::Job = match job {
-		#[cfg(any(feature = "v1_7", feature = "v1_8"))] batch::CreateBatchV1NamespacedJobResponse::Other(::http::StatusCode::CREATED, mut response) =>
-			response.json().expect("couldn't create job"),
-		#[cfg(any(feature = "v1_9", feature = "v1_10"))] batch::CreateBatchV1NamespacedJobResponse::Created(job) => job,
-		other => panic!("couldn't create job: {:?}", other),
-	};
+	let request =
+		batch::Job::create_batch_v1_namespaced_job("default", &job, None)
+		.expect("couldn't create job");
+	let response = client.execute(request).expect("couldn't create job");
+	let job: batch::Job =
+		::get_single_value(response, |response, _status_code, _response_body| match response {
+			#[cfg(any(feature = "v1_7", feature = "v1_8"))] Ok(batch::CreateBatchV1NamespacedJobResponse::Other) if _status_code == ::http::StatusCode::CREATED =>
+				match ::serde_json::from_slice(_response_body) {
+					Ok(job) => Ok(::SingleValueResult::GotValue(job)),
+					Err(ref err) if err.is_eof() => Ok(::SingleValueResult::NeedMoreData),
+					Err(err) => Err(err.into()),
+				},
+			#[cfg(not(any(feature = "v1_7", feature = "v1_8")))] Ok(batch::CreateBatchV1NamespacedJobResponse::Created(job)) =>
+				Ok(::SingleValueResult::GotValue(job)),
+			Ok(other) => Err(format!("{:?}", other).into()),
+			Err(::k8s_openapi::ResponseError::NeedMoreData) => Ok(::SingleValueResult::NeedMoreData),
+			Err(err) => Err(err.into()),
+		}).expect("couldn't create job");
 
 	let job_image =
 		job
@@ -88,7 +99,14 @@ fn create() {
 
 	// Wait for job to fail
 	loop {
-		let job: batch::Job = client.get(&job_self_link).expect("couldn't get job");
+		let response = client.get(&job_self_link).expect("couldn't get job");
+		let job: batch::Job =
+			::get_single_value(response, |response, _, _| match response {
+				Ok(batch::ReadBatchV1NamespacedJobResponse::Ok(job)) => Ok(::SingleValueResult::GotValue(job)),
+				Ok(other) => Err(format!("{:?}", other).into()),
+				Err(::k8s_openapi::ResponseError::NeedMoreData) => Ok(::SingleValueResult::NeedMoreData),
+				Err(err) => Err(err.into()),
+			}).expect("couldn't get job");
 
 		let job_status =
 			job
@@ -103,21 +121,19 @@ fn create() {
 
 	// Find a pod of the failed job using owner reference
 	let job_pod_status = loop {
-		#[cfg(feature = "v1_7")] let pod_list =
-			api::Pod::list_core_v1_namespaced_pod(
-				&client, "default",
-				None, None, None, None, None, None, None)
-			.expect("couldn't list pods");
-		#[cfg(not(feature = "v1_7"))] let pod_list =
-			api::Pod::list_core_v1_namespaced_pod(
-				&client, "default",
-				None, None, None, None, None, None, None, None, None)
-			.expect("couldn't list pods");
-		let pod_list = match pod_list {
-			#[cfg(feature = "v1_7")] api::ListCoreV1NamespacedPodResponse::Ok(pod_list) => pod_list,
-			#[cfg(not(feature = "v1_7"))] api::ListCoreV1NamespacedPodResponse::Ok(pod_list) => pod_list,
-			other => panic!("couldn't list pods: {:?}", other),
-		};
+		#[cfg(feature = "v1_7")] let request =
+			api::Pod::list_core_v1_namespaced_pod("default", None, None, None, None, None, None, None);
+		#[cfg(not(feature = "v1_7"))] let request =
+			api::Pod::list_core_v1_namespaced_pod("default", None, None, None, None, None, None, None, None, None);
+		let request = request.expect("couldn't list pods");
+		let response = client.execute(request).expect("couldn't list pods");;
+		let pod_list =
+			::get_single_value(response, |response, _, _| match response {
+				Ok(api::ListCoreV1NamespacedPodResponse::Ok(pod_list)) => Ok(::SingleValueResult::GotValue(pod_list)),
+				Ok(other) => Err(format!("{:?}", other).into()),
+				Err(::k8s_openapi::ResponseError::NeedMoreData) => Ok(::SingleValueResult::NeedMoreData),
+				Err(err) => Err(err.into()),
+			}).expect("couldn't list pods");
 
 		let job_pod_status =
 			pod_list
@@ -146,25 +162,35 @@ fn create() {
 		.terminated.expect("couldn't get job pod container termination info");
 	assert_eq!(job_pod_container_state_terminated.exit_code, 5);
 
-	client.delete(&job_self_link).expect("couldn't delete job");
+	let response = client.delete(&job_self_link).expect("couldn't delete job");
+	::get_single_value::<batch::DeleteBatchV1NamespacedJobResponse, _, _>(response, |_, status_code, _| match status_code {
+		::http::StatusCode::OK => Ok(::SingleValueResult::GotValue(())),
+		other => Err(other.to_string().into()),
+	}).expect("couldn't delete job");
 
 	// Delete all pods of the job using label selector
-	#[cfg(feature = "v1_7")] let pod_list =
-		api::Pod::list_core_v1_namespaced_pod(&client, "default", None, None, Some("job-name=k8s-openapi-tests-create-job"), None, None, None, None)
-		.expect("couldn't list pods");
-	#[cfg(not(feature = "v1_7"))] let pod_list =
-		api::Pod::list_core_v1_namespaced_pod(&client, "default", None, None, None, Some("job-name=k8s-openapi-tests-create-job"), None, None, None, None, None)
-		.expect("couldn't list pods");
-	let pod_list = match pod_list {
-		#[cfg(feature = "v1_7")] api::ListCoreV1NamespacedPodResponse::Ok(pod_list) => pod_list,
-		#[cfg(not(feature = "v1_7"))] api::ListCoreV1NamespacedPodResponse::Ok(pod_list) => pod_list,
-		other => panic!("couldn't list pods: {:?}", other),
-	};
+	#[cfg(feature = "v1_7")] let request =
+		api::Pod::list_core_v1_namespaced_pod("default", None, None, Some("job-name=k8s-openapi-tests-create-job"), None, None, None, None);
+	#[cfg(not(feature = "v1_7"))] let request =
+		api::Pod::list_core_v1_namespaced_pod("default", None, None, None, Some("job-name=k8s-openapi-tests-create-job"), None, None, None, None, None);
+	let request = request.expect("couldn't list pods");
+	let response = client.execute(request).expect("couldn't list pods");;
+	let pod_list =
+		::get_single_value(response, |response, _, _| match response {
+			Ok(api::ListCoreV1NamespacedPodResponse::Ok(pod_list)) => Ok(::SingleValueResult::GotValue(pod_list)),
+			Ok(other) => Err(format!("{:?}", other).into()),
+			Err(::k8s_openapi::ResponseError::NeedMoreData) => Ok(::SingleValueResult::NeedMoreData),
+			Err(err) => Err(err.into()),
+		}).expect("couldn't list pods");
 
 	for pod in pod_list.items {
 		let self_link =
 			pod.metadata.expect("couldn't get job pod metadata")
 			.self_link.expect("couldn't get job pod self link");
-		client.delete(&self_link).expect("couldn't delete job pod");
+		let response = client.delete(&self_link).expect("couldn't delete job pod");
+		::get_single_value::<api::DeleteCoreV1NamespacedPodResponse, _, _>(response, |_, status_code, _| match status_code {
+			::http::StatusCode::OK => Ok(::SingleValueResult::GotValue(())),
+			other => Err(other.to_string().into()),
+		}).expect("couldn't delete job pod");
 	}
 }

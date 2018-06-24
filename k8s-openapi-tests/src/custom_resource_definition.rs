@@ -32,17 +32,24 @@ fn list() {
 		..Default::default()
 	};
 
-	let custom_resource_definition = apiextensions::CustomResourceDefinition::create_apiextensions_v1beta1_custom_resource_definition(
-		&client,
-		&custom_resource_definition,
-		None).expect("couldn't create custom resource definition");;
-	let custom_resource_definition: apiextensions::CustomResourceDefinition = match custom_resource_definition {
-		#[cfg(feature = "v1_8")] apiextensions::CreateApiextensionsV1beta1CustomResourceDefinitionResponse::Other(::http::StatusCode::CREATED, mut response) =>
-			response.json().expect("couldn't create custom resource definition"),
-		#[cfg(not(feature = "v1_8"))] apiextensions::CreateApiextensionsV1beta1CustomResourceDefinitionResponse::Created(custom_resource_definition) =>
-			custom_resource_definition,
-		other => panic!("couldn't create custom resource definition: {:?}", other),
-	};
+	let request =
+		apiextensions::CustomResourceDefinition::create_apiextensions_v1beta1_custom_resource_definition(&custom_resource_definition, None)
+		.expect("couldn't create custom resource definition");
+	let response = client.execute(request).expect("couldn't create custom resource definition");
+	let custom_resource_definition: apiextensions::CustomResourceDefinition =
+		::get_single_value(response, |response, _status_code, _response_body| match response {
+			#[cfg(feature = "v1_8")] Ok(apiextensions::CreateApiextensionsV1beta1CustomResourceDefinitionResponse::Other) if _status_code == ::http::StatusCode::CREATED =>
+				match ::serde_json::from_slice(_response_body) {
+					Ok(custom_resource_definition) => Ok(::SingleValueResult::GotValue(custom_resource_definition)),
+					Err(ref err) if err.is_eof() => Ok(::SingleValueResult::NeedMoreData),
+					Err(err) => Err(err.into()),
+				},
+			#[cfg(not(feature = "v1_8"))] Ok(apiextensions::CreateApiextensionsV1beta1CustomResourceDefinitionResponse::Created(custom_resource_definition)) =>
+				Ok(::SingleValueResult::GotValue(custom_resource_definition)),
+			Ok(other) => Err(format!("{:?}", other).into()),
+			Err(::k8s_openapi::ResponseError::NeedMoreData) => Ok(::SingleValueResult::NeedMoreData),
+			Err(err) => Err(err.into()),
+		}).expect("couldn't create custom resource definition");
 
 	let custom_resource_definition_self_link = {
 		let metadata = custom_resource_definition.metadata.expect("couldn't get custom resource definition metadata");

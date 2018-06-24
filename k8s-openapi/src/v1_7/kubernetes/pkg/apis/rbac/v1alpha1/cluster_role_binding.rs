@@ -23,55 +23,55 @@ pub struct ClusterRoleBinding {
 
 // Generated from operation createRbacAuthorizationV1alpha1ClusterRoleBinding
 
-#[derive(Debug)]
-pub enum CreateRbacAuthorizationV1alpha1ClusterRoleBindingResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBinding),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl ClusterRoleBinding {
     /// create a ClusterRoleBinding
-    pub fn create_rbac_authorization_v1alpha1_cluster_role_binding<C>(
-        __client: &C,
+    pub fn create_rbac_authorization_v1alpha1_cluster_role_binding(
         body: &::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBinding,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<CreateRbacAuthorizationV1alpha1ClusterRoleBindingResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings")).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings?");
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.post(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum CreateRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    Ok(::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBinding),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for CreateRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 CreateRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => CreateRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized(response),
-            other => CreateRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => CreateRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized,
+            _ => CreateRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other,
         })
     }
 }
 
 // Generated from operation deleteRbacAuthorizationV1alpha1ClusterRoleBinding
 
-#[derive(Debug)]
-pub enum DeleteRbacAuthorizationV1alpha1ClusterRoleBindingResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::Status),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl ClusterRoleBinding {
     /// delete a ClusterRoleBinding
-    pub fn delete_rbac_authorization_v1alpha1_cluster_role_binding<C>(
-        __client: &C,
+    pub fn delete_rbac_authorization_v1alpha1_cluster_role_binding(
         // name of the ClusterRoleBinding
         name: &str,
         // The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately.
@@ -82,50 +82,58 @@ impl ClusterRoleBinding {
         pretty: Option<&str>,
         // Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.
         propagation_policy: Option<&str>,
-    ) -> Result<DeleteRbacAuthorizationV1alpha1ClusterRoleBindingResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings/{name}", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(grace_period_seconds) = grace_period_seconds {
-                __query_pairs.append_pair("gracePeriodSeconds", &grace_period_seconds.to_string());
-            }
-            if let Some(orphan_dependents) = orphan_dependents {
-                __query_pairs.append_pair("orphanDependents", &orphan_dependents.to_string());
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(propagation_policy) = propagation_policy {
-                __query_pairs.append_pair("propagationPolicy", &propagation_policy);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings/{name}?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(grace_period_seconds) = grace_period_seconds {
+            __query_pairs.append_pair("gracePeriodSeconds", &grace_period_seconds.to_string());
         }
+        if let Some(orphan_dependents) = orphan_dependents {
+            __query_pairs.append_pair("orphanDependents", &orphan_dependents.to_string());
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(propagation_policy) = propagation_policy {
+            __query_pairs.append_pair("propagationPolicy", &propagation_policy);
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.delete(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::delete(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum DeleteRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::Status),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for DeleteRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 DeleteRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => DeleteRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized(response),
-            other => DeleteRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => DeleteRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized,
+            _ => DeleteRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other,
         })
     }
 }
 
 // Generated from operation deleteRbacAuthorizationV1alpha1CollectionClusterRoleBinding
 
-#[derive(Debug)]
-pub enum DeleteRbacAuthorizationV1alpha1CollectionClusterRoleBindingResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::Status),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl ClusterRoleBinding {
     /// delete collection of ClusterRoleBinding
-    pub fn delete_rbac_authorization_v1alpha1_collection_cluster_role_binding<C>(
-        __client: &C,
+    pub fn delete_rbac_authorization_v1alpha1_collection_cluster_role_binding(
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
         field_selector: Option<&str>,
         // If true, partially initialized resources are included in the response.
@@ -140,59 +148,67 @@ impl ClusterRoleBinding {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<DeleteRbacAuthorizationV1alpha1CollectionClusterRoleBindingResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings")).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings?");
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.delete(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::delete(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum DeleteRbacAuthorizationV1alpha1CollectionClusterRoleBindingResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::Status),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for DeleteRbacAuthorizationV1alpha1CollectionClusterRoleBindingResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 DeleteRbacAuthorizationV1alpha1CollectionClusterRoleBindingResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => DeleteRbacAuthorizationV1alpha1CollectionClusterRoleBindingResponse::Unauthorized(response),
-            other => DeleteRbacAuthorizationV1alpha1CollectionClusterRoleBindingResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => DeleteRbacAuthorizationV1alpha1CollectionClusterRoleBindingResponse::Unauthorized,
+            _ => DeleteRbacAuthorizationV1alpha1CollectionClusterRoleBindingResponse::Other,
         })
     }
 }
 
 // Generated from operation listRbacAuthorizationV1alpha1ClusterRoleBinding
 
-#[derive(Debug)]
-pub enum ListRbacAuthorizationV1alpha1ClusterRoleBindingResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBindingList),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl ClusterRoleBinding {
     /// list or watch objects of kind ClusterRoleBinding
-    pub fn list_rbac_authorization_v1alpha1_cluster_role_binding<C>(
-        __client: &C,
+    pub fn list_rbac_authorization_v1alpha1_cluster_role_binding(
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
         field_selector: Option<&str>,
         // If true, partially initialized resources are included in the response.
@@ -207,177 +223,210 @@ impl ClusterRoleBinding {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<ListRbacAuthorizationV1alpha1ClusterRoleBindingResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings")).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings?");
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ListRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    Ok(::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBindingList),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ListRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ListRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ListRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized(response),
-            other => ListRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ListRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized,
+            _ => ListRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other,
         })
     }
 }
 
 // Generated from operation patchRbacAuthorizationV1alpha1ClusterRoleBinding
 
-#[derive(Debug)]
-pub enum PatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBinding),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl ClusterRoleBinding {
     /// partially update the specified ClusterRoleBinding
-    pub fn patch_rbac_authorization_v1alpha1_cluster_role_binding<C>(
-        __client: &C,
+    pub fn patch_rbac_authorization_v1alpha1_cluster_role_binding(
         // name of the ClusterRoleBinding
         name: &str,
         body: &::v1_7::apimachinery::pkg::apis::meta::v1::Patch,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<PatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings/{name}", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings/{name}?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.patch(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::patch(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum PatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    Ok(::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBinding),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for PatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 PatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => PatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized(response),
-            other => PatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => PatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized,
+            _ => PatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other,
         })
     }
 }
 
 // Generated from operation readRbacAuthorizationV1alpha1ClusterRoleBinding
 
-#[derive(Debug)]
-pub enum ReadRbacAuthorizationV1alpha1ClusterRoleBindingResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBinding),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl ClusterRoleBinding {
     /// read the specified ClusterRoleBinding
-    pub fn read_rbac_authorization_v1alpha1_cluster_role_binding<C>(
-        __client: &C,
+    pub fn read_rbac_authorization_v1alpha1_cluster_role_binding(
         // name of the ClusterRoleBinding
         name: &str,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReadRbacAuthorizationV1alpha1ClusterRoleBindingResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings/{name}", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings/{name}?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReadRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    Ok(::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBinding),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReadRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReadRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReadRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized(response),
-            other => ReadRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReadRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized,
+            _ => ReadRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other,
         })
     }
 }
 
 // Generated from operation replaceRbacAuthorizationV1alpha1ClusterRoleBinding
 
-#[derive(Debug)]
-pub enum ReplaceRbacAuthorizationV1alpha1ClusterRoleBindingResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBinding),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl ClusterRoleBinding {
     /// replace the specified ClusterRoleBinding
-    pub fn replace_rbac_authorization_v1alpha1_cluster_role_binding<C>(
-        __client: &C,
+    pub fn replace_rbac_authorization_v1alpha1_cluster_role_binding(
         // name of the ClusterRoleBinding
         name: &str,
         body: &::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBinding,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReplaceRbacAuthorizationV1alpha1ClusterRoleBindingResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings/{name}", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/apis/rbac.authorization.k8s.io/v1alpha1/clusterrolebindings/{name}?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.put(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::put(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReplaceRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    Ok(::v1_7::kubernetes::pkg::apis::rbac::v1alpha1::ClusterRoleBinding),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReplaceRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReplaceRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReplaceRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized(response),
-            other => ReplaceRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReplaceRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized,
+            _ => ReplaceRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other,
         })
     }
 }
 
 // Generated from operation watchRbacAuthorizationV1alpha1ClusterRoleBinding
 
-pub enum WatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse<R> where R: ::std::io::Read {
-    Ok(::serde_json::StreamDeserializer<'static, ::serde_json::de::IoRead<R>, ::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent>),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl ClusterRoleBinding {
     /// watch changes to an object of kind ClusterRoleBinding
-    pub fn watch_rbac_authorization_v1alpha1_cluster_role_binding<C>(
-        __client: &C,
+    pub fn watch_rbac_authorization_v1alpha1_cluster_role_binding(
         // name of the ClusterRoleBinding
         name: &str,
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
@@ -394,58 +443,69 @@ impl ClusterRoleBinding {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<WatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/apis/rbac.authorization.k8s.io/v1alpha1/watch/clusterrolebindings/{name}", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/apis/rbac.authorization.k8s.io/v1alpha1/watch/clusterrolebindings/{name}?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum WatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent, usize),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for WatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::Deserializer::from_reader(response).into_iter();
-                WatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Ok(result)
+                let mut deserializer = ::serde_json::Deserializer::from_slice(buf).into_iter();
+                let (result, byte_offset) = match deserializer.next() {
+                    Some(Ok(value)) => (value, deserializer.byte_offset()),
+                    Some(Err(ref err)) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Some(Err(err)) => return Err(::ResponseError::Json(err)),
+                    None => return Err(::ResponseError::NeedMoreData),
+                };
+                WatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Ok(result, byte_offset)
             },
-            ::http::StatusCode::UNAUTHORIZED => WatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized(response),
-            other => WatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => WatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Unauthorized,
+            _ => WatchRbacAuthorizationV1alpha1ClusterRoleBindingResponse::Other,
         })
     }
 }
 
 // Generated from operation watchRbacAuthorizationV1alpha1ClusterRoleBindingList
 
-pub enum WatchRbacAuthorizationV1alpha1ClusterRoleBindingListResponse<R> where R: ::std::io::Read {
-    Ok(::serde_json::StreamDeserializer<'static, ::serde_json::de::IoRead<R>, ::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent>),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl ClusterRoleBinding {
     /// watch individual changes to a list of ClusterRoleBinding
-    pub fn watch_rbac_authorization_v1alpha1_cluster_role_binding_list<C>(
-        __client: &C,
+    pub fn watch_rbac_authorization_v1alpha1_cluster_role_binding_list(
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
         field_selector: Option<&str>,
         // If true, partially initialized resources are included in the response.
@@ -460,42 +520,60 @@ impl ClusterRoleBinding {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<WatchRbacAuthorizationV1alpha1ClusterRoleBindingListResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/apis/rbac.authorization.k8s.io/v1alpha1/watch/clusterrolebindings")).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/apis/rbac.authorization.k8s.io/v1alpha1/watch/clusterrolebindings?");
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum WatchRbacAuthorizationV1alpha1ClusterRoleBindingListResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent, usize),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for WatchRbacAuthorizationV1alpha1ClusterRoleBindingListResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::Deserializer::from_reader(response).into_iter();
-                WatchRbacAuthorizationV1alpha1ClusterRoleBindingListResponse::Ok(result)
+                let mut deserializer = ::serde_json::Deserializer::from_slice(buf).into_iter();
+                let (result, byte_offset) = match deserializer.next() {
+                    Some(Ok(value)) => (value, deserializer.byte_offset()),
+                    Some(Err(ref err)) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Some(Err(err)) => return Err(::ResponseError::Json(err)),
+                    None => return Err(::ResponseError::NeedMoreData),
+                };
+                WatchRbacAuthorizationV1alpha1ClusterRoleBindingListResponse::Ok(result, byte_offset)
             },
-            ::http::StatusCode::UNAUTHORIZED => WatchRbacAuthorizationV1alpha1ClusterRoleBindingListResponse::Unauthorized(response),
-            other => WatchRbacAuthorizationV1alpha1ClusterRoleBindingListResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => WatchRbacAuthorizationV1alpha1ClusterRoleBindingListResponse::Unauthorized,
+            _ => WatchRbacAuthorizationV1alpha1ClusterRoleBindingListResponse::Other,
         })
     }
 }

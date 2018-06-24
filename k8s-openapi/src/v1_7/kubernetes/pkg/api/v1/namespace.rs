@@ -23,55 +23,55 @@ pub struct Namespace {
 
 // Generated from operation createCoreV1Namespace
 
-#[derive(Debug)]
-pub enum CreateCoreV1NamespaceResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// create a Namespace
-    pub fn create_core_v1_namespace<C>(
-        __client: &C,
+    pub fn create_core_v1_namespace(
         body: &::v1_7::kubernetes::pkg::api::v1::Namespace,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<CreateCoreV1NamespaceResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces")).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces?");
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.post(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum CreateCoreV1NamespaceResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for CreateCoreV1NamespaceResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 CreateCoreV1NamespaceResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => CreateCoreV1NamespaceResponse::Unauthorized(response),
-            other => CreateCoreV1NamespaceResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => CreateCoreV1NamespaceResponse::Unauthorized,
+            _ => CreateCoreV1NamespaceResponse::Other,
         })
     }
 }
 
 // Generated from operation deleteCoreV1Namespace
 
-#[derive(Debug)]
-pub enum DeleteCoreV1NamespaceResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::Status),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// delete a Namespace
-    pub fn delete_core_v1_namespace<C>(
-        __client: &C,
+    pub fn delete_core_v1_namespace(
         // name of the Namespace
         name: &str,
         // The duration in seconds before the object should be deleted. Value must be non-negative integer. The value zero indicates delete immediately. If this value is nil, the default grace period for the specified type will be used. Defaults to a per object value if not specified. zero means delete immediately.
@@ -82,50 +82,58 @@ impl Namespace {
         pretty: Option<&str>,
         // Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.
         propagation_policy: Option<&str>,
-    ) -> Result<DeleteCoreV1NamespaceResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{name}", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(grace_period_seconds) = grace_period_seconds {
-                __query_pairs.append_pair("gracePeriodSeconds", &grace_period_seconds.to_string());
-            }
-            if let Some(orphan_dependents) = orphan_dependents {
-                __query_pairs.append_pair("orphanDependents", &orphan_dependents.to_string());
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(propagation_policy) = propagation_policy {
-                __query_pairs.append_pair("propagationPolicy", &propagation_policy);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{name}?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(grace_period_seconds) = grace_period_seconds {
+            __query_pairs.append_pair("gracePeriodSeconds", &grace_period_seconds.to_string());
         }
+        if let Some(orphan_dependents) = orphan_dependents {
+            __query_pairs.append_pair("orphanDependents", &orphan_dependents.to_string());
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(propagation_policy) = propagation_policy {
+            __query_pairs.append_pair("propagationPolicy", &propagation_policy);
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.delete(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::delete(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum DeleteCoreV1NamespaceResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::Status),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for DeleteCoreV1NamespaceResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 DeleteCoreV1NamespaceResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => DeleteCoreV1NamespaceResponse::Unauthorized(response),
-            other => DeleteCoreV1NamespaceResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => DeleteCoreV1NamespaceResponse::Unauthorized,
+            _ => DeleteCoreV1NamespaceResponse::Other,
         })
     }
 }
 
 // Generated from operation listCoreV1Namespace
 
-#[derive(Debug)]
-pub enum ListCoreV1NamespaceResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::NamespaceList),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// list or watch objects of kind Namespace
-    pub fn list_core_v1_namespace<C>(
-        __client: &C,
+    pub fn list_core_v1_namespace(
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
         field_selector: Option<&str>,
         // If true, partially initialized resources are included in the response.
@@ -140,139 +148,163 @@ impl Namespace {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<ListCoreV1NamespaceResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces")).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces?");
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ListCoreV1NamespaceResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::NamespaceList),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ListCoreV1NamespaceResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ListCoreV1NamespaceResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ListCoreV1NamespaceResponse::Unauthorized(response),
-            other => ListCoreV1NamespaceResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ListCoreV1NamespaceResponse::Unauthorized,
+            _ => ListCoreV1NamespaceResponse::Other,
         })
     }
 }
 
 // Generated from operation patchCoreV1Namespace
 
-#[derive(Debug)]
-pub enum PatchCoreV1NamespaceResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// partially update the specified Namespace
-    pub fn patch_core_v1_namespace<C>(
-        __client: &C,
+    pub fn patch_core_v1_namespace(
         // name of the Namespace
         name: &str,
         body: &::v1_7::apimachinery::pkg::apis::meta::v1::Patch,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<PatchCoreV1NamespaceResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{name}", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{name}?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.patch(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::patch(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum PatchCoreV1NamespaceResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for PatchCoreV1NamespaceResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 PatchCoreV1NamespaceResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => PatchCoreV1NamespaceResponse::Unauthorized(response),
-            other => PatchCoreV1NamespaceResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => PatchCoreV1NamespaceResponse::Unauthorized,
+            _ => PatchCoreV1NamespaceResponse::Other,
         })
     }
 }
 
 // Generated from operation patchCoreV1NamespaceStatus
 
-#[derive(Debug)]
-pub enum PatchCoreV1NamespaceStatusResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// partially update status of the specified Namespace
-    pub fn patch_core_v1_namespace_status<C>(
-        __client: &C,
+    pub fn patch_core_v1_namespace_status(
         // name of the Namespace
         name: &str,
         body: &::v1_7::apimachinery::pkg::apis::meta::v1::Patch,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<PatchCoreV1NamespaceStatusResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{name}/status", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{name}/status?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.patch(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::patch(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum PatchCoreV1NamespaceStatusResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for PatchCoreV1NamespaceStatusResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 PatchCoreV1NamespaceStatusResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => PatchCoreV1NamespaceStatusResponse::Unauthorized(response),
-            other => PatchCoreV1NamespaceStatusResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => PatchCoreV1NamespaceStatusResponse::Unauthorized,
+            _ => PatchCoreV1NamespaceStatusResponse::Other,
         })
     }
 }
 
 // Generated from operation readCoreV1Namespace
 
-#[derive(Debug)]
-pub enum ReadCoreV1NamespaceResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// read the specified Namespace
-    pub fn read_core_v1_namespace<C>(
-        __client: &C,
+    pub fn read_core_v1_namespace(
         // name of the Namespace
         name: &str,
         // Should the export be exact.  Exact export maintains cluster-specific fields like 'Namespace'.
@@ -281,205 +313,246 @@ impl Namespace {
         export: Option<bool>,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReadCoreV1NamespaceResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{name}", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(exact) = exact {
-                __query_pairs.append_pair("exact", &exact.to_string());
-            }
-            if let Some(export) = export {
-                __query_pairs.append_pair("export", &export.to_string());
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{name}?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(exact) = exact {
+            __query_pairs.append_pair("exact", &exact.to_string());
         }
+        if let Some(export) = export {
+            __query_pairs.append_pair("export", &export.to_string());
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReadCoreV1NamespaceResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReadCoreV1NamespaceResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReadCoreV1NamespaceResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReadCoreV1NamespaceResponse::Unauthorized(response),
-            other => ReadCoreV1NamespaceResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReadCoreV1NamespaceResponse::Unauthorized,
+            _ => ReadCoreV1NamespaceResponse::Other,
         })
     }
 }
 
 // Generated from operation readCoreV1NamespaceStatus
 
-#[derive(Debug)]
-pub enum ReadCoreV1NamespaceStatusResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// read status of the specified Namespace
-    pub fn read_core_v1_namespace_status<C>(
-        __client: &C,
+    pub fn read_core_v1_namespace_status(
         // name of the Namespace
         name: &str,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReadCoreV1NamespaceStatusResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{name}/status", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{name}/status?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReadCoreV1NamespaceStatusResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReadCoreV1NamespaceStatusResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReadCoreV1NamespaceStatusResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReadCoreV1NamespaceStatusResponse::Unauthorized(response),
-            other => ReadCoreV1NamespaceStatusResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReadCoreV1NamespaceStatusResponse::Unauthorized,
+            _ => ReadCoreV1NamespaceStatusResponse::Other,
         })
     }
 }
 
 // Generated from operation replaceCoreV1Namespace
 
-#[derive(Debug)]
-pub enum ReplaceCoreV1NamespaceResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// replace the specified Namespace
-    pub fn replace_core_v1_namespace<C>(
-        __client: &C,
+    pub fn replace_core_v1_namespace(
         // name of the Namespace
         name: &str,
         body: &::v1_7::kubernetes::pkg::api::v1::Namespace,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReplaceCoreV1NamespaceResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{name}", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{name}?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.put(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::put(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReplaceCoreV1NamespaceResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReplaceCoreV1NamespaceResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReplaceCoreV1NamespaceResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReplaceCoreV1NamespaceResponse::Unauthorized(response),
-            other => ReplaceCoreV1NamespaceResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReplaceCoreV1NamespaceResponse::Unauthorized,
+            _ => ReplaceCoreV1NamespaceResponse::Other,
         })
     }
 }
 
 // Generated from operation replaceCoreV1NamespaceFinalize
 
-#[derive(Debug)]
-pub enum ReplaceCoreV1NamespaceFinalizeResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// replace finalize of the specified Namespace
-    pub fn replace_core_v1_namespace_finalize<C>(
-        __client: &C,
+    pub fn replace_core_v1_namespace_finalize(
         // name of the Namespace
         name: &str,
         body: &::v1_7::kubernetes::pkg::api::v1::Namespace,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReplaceCoreV1NamespaceFinalizeResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{name}/finalize", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{name}/finalize?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.put(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::put(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReplaceCoreV1NamespaceFinalizeResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReplaceCoreV1NamespaceFinalizeResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReplaceCoreV1NamespaceFinalizeResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReplaceCoreV1NamespaceFinalizeResponse::Unauthorized(response),
-            other => ReplaceCoreV1NamespaceFinalizeResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReplaceCoreV1NamespaceFinalizeResponse::Unauthorized,
+            _ => ReplaceCoreV1NamespaceFinalizeResponse::Other,
         })
     }
 }
 
 // Generated from operation replaceCoreV1NamespaceStatus
 
-#[derive(Debug)]
-pub enum ReplaceCoreV1NamespaceStatusResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// replace status of the specified Namespace
-    pub fn replace_core_v1_namespace_status<C>(
-        __client: &C,
+    pub fn replace_core_v1_namespace_status(
         // name of the Namespace
         name: &str,
         body: &::v1_7::kubernetes::pkg::api::v1::Namespace,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReplaceCoreV1NamespaceStatusResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{name}/status", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{name}/status?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.put(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::put(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReplaceCoreV1NamespaceStatusResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Namespace),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReplaceCoreV1NamespaceStatusResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReplaceCoreV1NamespaceStatusResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReplaceCoreV1NamespaceStatusResponse::Unauthorized(response),
-            other => ReplaceCoreV1NamespaceStatusResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReplaceCoreV1NamespaceStatusResponse::Unauthorized,
+            _ => ReplaceCoreV1NamespaceStatusResponse::Other,
         })
     }
 }
 
 // Generated from operation watchCoreV1Namespace
 
-pub enum WatchCoreV1NamespaceResponse<R> where R: ::std::io::Read {
-    Ok(::serde_json::StreamDeserializer<'static, ::serde_json::de::IoRead<R>, ::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent>),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// watch changes to an object of kind Namespace
-    pub fn watch_core_v1_namespace<C>(
-        __client: &C,
+    pub fn watch_core_v1_namespace(
         // name of the Namespace
         name: &str,
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
@@ -496,58 +569,69 @@ impl Namespace {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<WatchCoreV1NamespaceResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/watch/namespaces/{name}", name = name)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/watch/namespaces/{name}?", name = name);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum WatchCoreV1NamespaceResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent, usize),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for WatchCoreV1NamespaceResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::Deserializer::from_reader(response).into_iter();
-                WatchCoreV1NamespaceResponse::Ok(result)
+                let mut deserializer = ::serde_json::Deserializer::from_slice(buf).into_iter();
+                let (result, byte_offset) = match deserializer.next() {
+                    Some(Ok(value)) => (value, deserializer.byte_offset()),
+                    Some(Err(ref err)) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Some(Err(err)) => return Err(::ResponseError::Json(err)),
+                    None => return Err(::ResponseError::NeedMoreData),
+                };
+                WatchCoreV1NamespaceResponse::Ok(result, byte_offset)
             },
-            ::http::StatusCode::UNAUTHORIZED => WatchCoreV1NamespaceResponse::Unauthorized(response),
-            other => WatchCoreV1NamespaceResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => WatchCoreV1NamespaceResponse::Unauthorized,
+            _ => WatchCoreV1NamespaceResponse::Other,
         })
     }
 }
 
 // Generated from operation watchCoreV1NamespaceList
 
-pub enum WatchCoreV1NamespaceListResponse<R> where R: ::std::io::Read {
-    Ok(::serde_json::StreamDeserializer<'static, ::serde_json::de::IoRead<R>, ::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent>),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Namespace {
     /// watch individual changes to a list of Namespace
-    pub fn watch_core_v1_namespace_list<C>(
-        __client: &C,
+    pub fn watch_core_v1_namespace_list(
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
         field_selector: Option<&str>,
         // If true, partially initialized resources are included in the response.
@@ -562,42 +646,60 @@ impl Namespace {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<WatchCoreV1NamespaceListResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/watch/namespaces")).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/watch/namespaces?");
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum WatchCoreV1NamespaceListResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent, usize),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for WatchCoreV1NamespaceListResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::Deserializer::from_reader(response).into_iter();
-                WatchCoreV1NamespaceListResponse::Ok(result)
+                let mut deserializer = ::serde_json::Deserializer::from_slice(buf).into_iter();
+                let (result, byte_offset) = match deserializer.next() {
+                    Some(Ok(value)) => (value, deserializer.byte_offset()),
+                    Some(Err(ref err)) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Some(Err(err)) => return Err(::ResponseError::Json(err)),
+                    None => return Err(::ResponseError::NeedMoreData),
+                };
+                WatchCoreV1NamespaceListResponse::Ok(result, byte_offset)
             },
-            ::http::StatusCode::UNAUTHORIZED => WatchCoreV1NamespaceListResponse::Unauthorized(response),
-            other => WatchCoreV1NamespaceListResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => WatchCoreV1NamespaceListResponse::Unauthorized,
+            _ => WatchCoreV1NamespaceListResponse::Other,
         })
     }
 }

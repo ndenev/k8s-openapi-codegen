@@ -22,50 +22,66 @@ pub struct LocalSubjectAccessReview {
 
 // Generated from operation createAuthorizationV1beta1NamespacedLocalSubjectAccessReview
 
-#[derive(Debug)]
-pub enum CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse<R> where R: ::std::io::Read {
-    Ok(::v1_9::api::authorization::v1beta1::LocalSubjectAccessReview),
-    Created(::v1_9::api::authorization::v1beta1::LocalSubjectAccessReview),
-    Accepted(::v1_9::api::authorization::v1beta1::LocalSubjectAccessReview),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl LocalSubjectAccessReview {
     /// create a LocalSubjectAccessReview
-    pub fn create_authorization_v1beta1_namespaced_local_subject_access_review<C>(
-        __client: &C,
+    pub fn create_authorization_v1beta1_namespaced_local_subject_access_review(
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         body: &::v1_9::api::authorization::v1beta1::LocalSubjectAccessReview,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/apis/authorization.k8s.io/v1beta1/namespaces/{namespace}/localsubjectaccessreviews", namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/apis/authorization.k8s.io/v1beta1/namespaces/{namespace}/localsubjectaccessreviews?", namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.post(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse {
+    Ok(::v1_9::api::authorization::v1beta1::LocalSubjectAccessReview),
+    Created(::v1_9::api::authorization::v1beta1::LocalSubjectAccessReview),
+    Accepted(::v1_9::api::authorization::v1beta1::LocalSubjectAccessReview),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse::Ok(result)
             },
             ::http::StatusCode::CREATED => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse::Created(result)
             },
             ::http::StatusCode::ACCEPTED => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse::Accepted(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse::Unauthorized(response),
-            other => CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse::Unauthorized,
+            _ => CreateAuthorizationV1beta1NamespacedLocalSubjectAccessReviewResponse::Other,
         })
     }
 }

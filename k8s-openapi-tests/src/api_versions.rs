@@ -10,12 +10,15 @@ fn list() {
 
 	let client = ::Client::new().expect("couldn't create client");
 
+	let request = k8s::get_api_versions().expect("couldn't get API versions");
+	let response = client.execute(request).expect("couldn't get API versions");
 	let api_versions =
-		k8s::get_api_versions(&client)
-		.expect("couldn't get API versions");
-	let api_versions = match api_versions {
-		k8s::GetAPIVersionsResponse::Ok(api_versions) => api_versions,
-		other => panic!("couldn't get API versions: {:?}", other),
-	};
+		::get_single_value(response, |response, _, _| match response {
+			Ok(k8s::GetAPIVersionsResponse::Ok(api_versions)) => Ok(::SingleValueResult::GotValue(api_versions)),
+			Ok(other) => Err(format!("{:?}", other).into()),
+			Err(::k8s_openapi::ResponseError::NeedMoreData) => Ok(::SingleValueResult::NeedMoreData),
+			Err(err) => Err(err.into()),
+		}).expect("couldn't get API versions");
+
 	assert_eq!(api_versions.kind, Some("APIGroupList".to_string()));
 }

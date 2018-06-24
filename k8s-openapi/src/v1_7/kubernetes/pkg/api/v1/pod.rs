@@ -23,60 +23,61 @@ pub struct Pod {
 
 // Generated from operation connectCoreV1DeleteNamespacedPodProxy
 
-#[derive(Debug)]
-pub enum ConnectCoreV1DeleteNamespacedPodProxyResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect DELETE requests to proxy of Pod
-    pub fn connect_core_v1_delete_namespaced_pod_proxy<C>(
-        __client: &C,
+    pub fn connect_core_v1_delete_namespaced_pod_proxy(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // Path is the URL path to use for the current proxy request to pod.
         path: Option<&str>,
-    ) -> Result<ConnectCoreV1DeleteNamespacedPodProxyResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(path) = path {
-                __query_pairs.append_pair("path", &path);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(path) = path {
+            __query_pairs.append_pair("path", &path);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.delete(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::delete(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1DeleteNamespacedPodProxyResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1DeleteNamespacedPodProxyResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1DeleteNamespacedPodProxyResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1DeleteNamespacedPodProxyResponse::Unauthorized(response),
-            other => ConnectCoreV1DeleteNamespacedPodProxyResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1DeleteNamespacedPodProxyResponse::Unauthorized,
+            _ => ConnectCoreV1DeleteNamespacedPodProxyResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1DeleteNamespacedPodProxyWithPath
 
-#[derive(Debug)]
-pub enum ConnectCoreV1DeleteNamespacedPodProxyWithPathResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect DELETE requests to proxy of Pod
-    pub fn connect_core_v1_delete_namespaced_pod_proxy_with_path<C>(
-        __client: &C,
+    pub fn connect_core_v1_delete_namespaced_pod_proxy_with_path(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -85,43 +86,52 @@ impl Pod {
         path: &str,
         // Path is the URL path to use for the current proxy request to pod.
         path_: Option<&str>,
-    ) -> Result<ConnectCoreV1DeleteNamespacedPodProxyWithPathResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy/{path}", name = name, namespace = namespace, path = path)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(path_) = path_ {
-                __query_pairs.append_pair("path", &path_);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy/{path}?", name = name, namespace = namespace, path = path);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(path_) = path_ {
+            __query_pairs.append_pair("path", &path_);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.delete(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::delete(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1DeleteNamespacedPodProxyWithPathResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1DeleteNamespacedPodProxyWithPathResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1DeleteNamespacedPodProxyWithPathResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1DeleteNamespacedPodProxyWithPathResponse::Unauthorized(response),
-            other => ConnectCoreV1DeleteNamespacedPodProxyWithPathResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1DeleteNamespacedPodProxyWithPathResponse::Unauthorized,
+            _ => ConnectCoreV1DeleteNamespacedPodProxyWithPathResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1GetNamespacedPodAttach
 
-#[derive(Debug)]
-pub enum ConnectCoreV1GetNamespacedPodAttachResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect GET requests to attach of Pod
-    pub fn connect_core_v1_get_namespaced_pod_attach<C>(
-        __client: &C,
+    pub fn connect_core_v1_get_namespaced_pod_attach(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -136,55 +146,64 @@ impl Pod {
         stdout: Option<bool>,
         // TTY if true indicates that a tty will be allocated for the attach call. This is passed through the container runtime so the tty is allocated on the worker node by the container runtime. Defaults to false.
         tty: Option<bool>,
-    ) -> Result<ConnectCoreV1GetNamespacedPodAttachResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/attach", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(container) = container {
-                __query_pairs.append_pair("container", &container);
-            }
-            if let Some(stderr) = stderr {
-                __query_pairs.append_pair("stderr", &stderr.to_string());
-            }
-            if let Some(stdin) = stdin {
-                __query_pairs.append_pair("stdin", &stdin.to_string());
-            }
-            if let Some(stdout) = stdout {
-                __query_pairs.append_pair("stdout", &stdout.to_string());
-            }
-            if let Some(tty) = tty {
-                __query_pairs.append_pair("tty", &tty.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/attach?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(container) = container {
+            __query_pairs.append_pair("container", &container);
         }
+        if let Some(stderr) = stderr {
+            __query_pairs.append_pair("stderr", &stderr.to_string());
+        }
+        if let Some(stdin) = stdin {
+            __query_pairs.append_pair("stdin", &stdin.to_string());
+        }
+        if let Some(stdout) = stdout {
+            __query_pairs.append_pair("stdout", &stdout.to_string());
+        }
+        if let Some(tty) = tty {
+            __query_pairs.append_pair("tty", &tty.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1GetNamespacedPodAttachResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1GetNamespacedPodAttachResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1GetNamespacedPodAttachResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1GetNamespacedPodAttachResponse::Unauthorized(response),
-            other => ConnectCoreV1GetNamespacedPodAttachResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1GetNamespacedPodAttachResponse::Unauthorized,
+            _ => ConnectCoreV1GetNamespacedPodAttachResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1GetNamespacedPodExec
 
-#[derive(Debug)]
-pub enum ConnectCoreV1GetNamespacedPodExecResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect GET requests to exec of Pod
-    pub fn connect_core_v1_get_namespaced_pod_exec<C>(
-        __client: &C,
+    pub fn connect_core_v1_get_namespaced_pod_exec(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -201,144 +220,171 @@ impl Pod {
         stdout: Option<bool>,
         // TTY if true indicates that a tty will be allocated for the exec call. Defaults to false.
         tty: Option<bool>,
-    ) -> Result<ConnectCoreV1GetNamespacedPodExecResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/exec", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(command) = command {
-                __query_pairs.append_pair("command", &command);
-            }
-            if let Some(container) = container {
-                __query_pairs.append_pair("container", &container);
-            }
-            if let Some(stderr) = stderr {
-                __query_pairs.append_pair("stderr", &stderr.to_string());
-            }
-            if let Some(stdin) = stdin {
-                __query_pairs.append_pair("stdin", &stdin.to_string());
-            }
-            if let Some(stdout) = stdout {
-                __query_pairs.append_pair("stdout", &stdout.to_string());
-            }
-            if let Some(tty) = tty {
-                __query_pairs.append_pair("tty", &tty.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/exec?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(command) = command {
+            __query_pairs.append_pair("command", &command);
         }
+        if let Some(container) = container {
+            __query_pairs.append_pair("container", &container);
+        }
+        if let Some(stderr) = stderr {
+            __query_pairs.append_pair("stderr", &stderr.to_string());
+        }
+        if let Some(stdin) = stdin {
+            __query_pairs.append_pair("stdin", &stdin.to_string());
+        }
+        if let Some(stdout) = stdout {
+            __query_pairs.append_pair("stdout", &stdout.to_string());
+        }
+        if let Some(tty) = tty {
+            __query_pairs.append_pair("tty", &tty.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1GetNamespacedPodExecResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1GetNamespacedPodExecResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1GetNamespacedPodExecResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1GetNamespacedPodExecResponse::Unauthorized(response),
-            other => ConnectCoreV1GetNamespacedPodExecResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1GetNamespacedPodExecResponse::Unauthorized,
+            _ => ConnectCoreV1GetNamespacedPodExecResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1GetNamespacedPodPortforward
 
-#[derive(Debug)]
-pub enum ConnectCoreV1GetNamespacedPodPortforwardResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect GET requests to portforward of Pod
-    pub fn connect_core_v1_get_namespaced_pod_portforward<C>(
-        __client: &C,
+    pub fn connect_core_v1_get_namespaced_pod_portforward(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // List of ports to forward Required when using WebSockets
         ports: Option<i64>,
-    ) -> Result<ConnectCoreV1GetNamespacedPodPortforwardResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/portforward", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(ports) = ports {
-                __query_pairs.append_pair("ports", &ports.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/portforward?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(ports) = ports {
+            __query_pairs.append_pair("ports", &ports.to_string());
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1GetNamespacedPodPortforwardResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1GetNamespacedPodPortforwardResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1GetNamespacedPodPortforwardResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1GetNamespacedPodPortforwardResponse::Unauthorized(response),
-            other => ConnectCoreV1GetNamespacedPodPortforwardResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1GetNamespacedPodPortforwardResponse::Unauthorized,
+            _ => ConnectCoreV1GetNamespacedPodPortforwardResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1GetNamespacedPodProxy
 
-#[derive(Debug)]
-pub enum ConnectCoreV1GetNamespacedPodProxyResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect GET requests to proxy of Pod
-    pub fn connect_core_v1_get_namespaced_pod_proxy<C>(
-        __client: &C,
+    pub fn connect_core_v1_get_namespaced_pod_proxy(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // Path is the URL path to use for the current proxy request to pod.
         path: Option<&str>,
-    ) -> Result<ConnectCoreV1GetNamespacedPodProxyResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(path) = path {
-                __query_pairs.append_pair("path", &path);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(path) = path {
+            __query_pairs.append_pair("path", &path);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1GetNamespacedPodProxyResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1GetNamespacedPodProxyResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1GetNamespacedPodProxyResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1GetNamespacedPodProxyResponse::Unauthorized(response),
-            other => ConnectCoreV1GetNamespacedPodProxyResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1GetNamespacedPodProxyResponse::Unauthorized,
+            _ => ConnectCoreV1GetNamespacedPodProxyResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1GetNamespacedPodProxyWithPath
 
-#[derive(Debug)]
-pub enum ConnectCoreV1GetNamespacedPodProxyWithPathResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect GET requests to proxy of Pod
-    pub fn connect_core_v1_get_namespaced_pod_proxy_with_path<C>(
-        __client: &C,
+    pub fn connect_core_v1_get_namespaced_pod_proxy_with_path(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -347,86 +393,104 @@ impl Pod {
         path: &str,
         // Path is the URL path to use for the current proxy request to pod.
         path_: Option<&str>,
-    ) -> Result<ConnectCoreV1GetNamespacedPodProxyWithPathResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy/{path}", name = name, namespace = namespace, path = path)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(path_) = path_ {
-                __query_pairs.append_pair("path", &path_);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy/{path}?", name = name, namespace = namespace, path = path);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(path_) = path_ {
+            __query_pairs.append_pair("path", &path_);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1GetNamespacedPodProxyWithPathResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1GetNamespacedPodProxyWithPathResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1GetNamespacedPodProxyWithPathResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1GetNamespacedPodProxyWithPathResponse::Unauthorized(response),
-            other => ConnectCoreV1GetNamespacedPodProxyWithPathResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1GetNamespacedPodProxyWithPathResponse::Unauthorized,
+            _ => ConnectCoreV1GetNamespacedPodProxyWithPathResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1PatchNamespacedPodProxy
 
-#[derive(Debug)]
-pub enum ConnectCoreV1PatchNamespacedPodProxyResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect PATCH requests to proxy of Pod
-    pub fn connect_core_v1_patch_namespaced_pod_proxy<C>(
-        __client: &C,
+    pub fn connect_core_v1_patch_namespaced_pod_proxy(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // Path is the URL path to use for the current proxy request to pod.
         path: Option<&str>,
-    ) -> Result<ConnectCoreV1PatchNamespacedPodProxyResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(path) = path {
-                __query_pairs.append_pair("path", &path);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(path) = path {
+            __query_pairs.append_pair("path", &path);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.patch(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::patch(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1PatchNamespacedPodProxyResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1PatchNamespacedPodProxyResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1PatchNamespacedPodProxyResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PatchNamespacedPodProxyResponse::Unauthorized(response),
-            other => ConnectCoreV1PatchNamespacedPodProxyResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PatchNamespacedPodProxyResponse::Unauthorized,
+            _ => ConnectCoreV1PatchNamespacedPodProxyResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1PatchNamespacedPodProxyWithPath
 
-#[derive(Debug)]
-pub enum ConnectCoreV1PatchNamespacedPodProxyWithPathResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect PATCH requests to proxy of Pod
-    pub fn connect_core_v1_patch_namespaced_pod_proxy_with_path<C>(
-        __client: &C,
+    pub fn connect_core_v1_patch_namespaced_pod_proxy_with_path(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -435,43 +499,52 @@ impl Pod {
         path: &str,
         // Path is the URL path to use for the current proxy request to pod.
         path_: Option<&str>,
-    ) -> Result<ConnectCoreV1PatchNamespacedPodProxyWithPathResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy/{path}", name = name, namespace = namespace, path = path)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(path_) = path_ {
-                __query_pairs.append_pair("path", &path_);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy/{path}?", name = name, namespace = namespace, path = path);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(path_) = path_ {
+            __query_pairs.append_pair("path", &path_);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.patch(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::patch(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1PatchNamespacedPodProxyWithPathResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1PatchNamespacedPodProxyWithPathResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1PatchNamespacedPodProxyWithPathResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PatchNamespacedPodProxyWithPathResponse::Unauthorized(response),
-            other => ConnectCoreV1PatchNamespacedPodProxyWithPathResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PatchNamespacedPodProxyWithPathResponse::Unauthorized,
+            _ => ConnectCoreV1PatchNamespacedPodProxyWithPathResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1PostNamespacedPodAttach
 
-#[derive(Debug)]
-pub enum ConnectCoreV1PostNamespacedPodAttachResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect POST requests to attach of Pod
-    pub fn connect_core_v1_post_namespaced_pod_attach<C>(
-        __client: &C,
+    pub fn connect_core_v1_post_namespaced_pod_attach(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -486,55 +559,64 @@ impl Pod {
         stdout: Option<bool>,
         // TTY if true indicates that a tty will be allocated for the attach call. This is passed through the container runtime so the tty is allocated on the worker node by the container runtime. Defaults to false.
         tty: Option<bool>,
-    ) -> Result<ConnectCoreV1PostNamespacedPodAttachResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/attach", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(container) = container {
-                __query_pairs.append_pair("container", &container);
-            }
-            if let Some(stderr) = stderr {
-                __query_pairs.append_pair("stderr", &stderr.to_string());
-            }
-            if let Some(stdin) = stdin {
-                __query_pairs.append_pair("stdin", &stdin.to_string());
-            }
-            if let Some(stdout) = stdout {
-                __query_pairs.append_pair("stdout", &stdout.to_string());
-            }
-            if let Some(tty) = tty {
-                __query_pairs.append_pair("tty", &tty.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/attach?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(container) = container {
+            __query_pairs.append_pair("container", &container);
         }
+        if let Some(stderr) = stderr {
+            __query_pairs.append_pair("stderr", &stderr.to_string());
+        }
+        if let Some(stdin) = stdin {
+            __query_pairs.append_pair("stdin", &stdin.to_string());
+        }
+        if let Some(stdout) = stdout {
+            __query_pairs.append_pair("stdout", &stdout.to_string());
+        }
+        if let Some(tty) = tty {
+            __query_pairs.append_pair("tty", &tty.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.post(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1PostNamespacedPodAttachResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1PostNamespacedPodAttachResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1PostNamespacedPodAttachResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PostNamespacedPodAttachResponse::Unauthorized(response),
-            other => ConnectCoreV1PostNamespacedPodAttachResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PostNamespacedPodAttachResponse::Unauthorized,
+            _ => ConnectCoreV1PostNamespacedPodAttachResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1PostNamespacedPodExec
 
-#[derive(Debug)]
-pub enum ConnectCoreV1PostNamespacedPodExecResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect POST requests to exec of Pod
-    pub fn connect_core_v1_post_namespaced_pod_exec<C>(
-        __client: &C,
+    pub fn connect_core_v1_post_namespaced_pod_exec(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -551,144 +633,171 @@ impl Pod {
         stdout: Option<bool>,
         // TTY if true indicates that a tty will be allocated for the exec call. Defaults to false.
         tty: Option<bool>,
-    ) -> Result<ConnectCoreV1PostNamespacedPodExecResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/exec", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(command) = command {
-                __query_pairs.append_pair("command", &command);
-            }
-            if let Some(container) = container {
-                __query_pairs.append_pair("container", &container);
-            }
-            if let Some(stderr) = stderr {
-                __query_pairs.append_pair("stderr", &stderr.to_string());
-            }
-            if let Some(stdin) = stdin {
-                __query_pairs.append_pair("stdin", &stdin.to_string());
-            }
-            if let Some(stdout) = stdout {
-                __query_pairs.append_pair("stdout", &stdout.to_string());
-            }
-            if let Some(tty) = tty {
-                __query_pairs.append_pair("tty", &tty.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/exec?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(command) = command {
+            __query_pairs.append_pair("command", &command);
         }
+        if let Some(container) = container {
+            __query_pairs.append_pair("container", &container);
+        }
+        if let Some(stderr) = stderr {
+            __query_pairs.append_pair("stderr", &stderr.to_string());
+        }
+        if let Some(stdin) = stdin {
+            __query_pairs.append_pair("stdin", &stdin.to_string());
+        }
+        if let Some(stdout) = stdout {
+            __query_pairs.append_pair("stdout", &stdout.to_string());
+        }
+        if let Some(tty) = tty {
+            __query_pairs.append_pair("tty", &tty.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.post(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1PostNamespacedPodExecResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1PostNamespacedPodExecResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1PostNamespacedPodExecResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PostNamespacedPodExecResponse::Unauthorized(response),
-            other => ConnectCoreV1PostNamespacedPodExecResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PostNamespacedPodExecResponse::Unauthorized,
+            _ => ConnectCoreV1PostNamespacedPodExecResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1PostNamespacedPodPortforward
 
-#[derive(Debug)]
-pub enum ConnectCoreV1PostNamespacedPodPortforwardResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect POST requests to portforward of Pod
-    pub fn connect_core_v1_post_namespaced_pod_portforward<C>(
-        __client: &C,
+    pub fn connect_core_v1_post_namespaced_pod_portforward(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // List of ports to forward Required when using WebSockets
         ports: Option<i64>,
-    ) -> Result<ConnectCoreV1PostNamespacedPodPortforwardResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/portforward", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(ports) = ports {
-                __query_pairs.append_pair("ports", &ports.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/portforward?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(ports) = ports {
+            __query_pairs.append_pair("ports", &ports.to_string());
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.post(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1PostNamespacedPodPortforwardResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1PostNamespacedPodPortforwardResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1PostNamespacedPodPortforwardResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PostNamespacedPodPortforwardResponse::Unauthorized(response),
-            other => ConnectCoreV1PostNamespacedPodPortforwardResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PostNamespacedPodPortforwardResponse::Unauthorized,
+            _ => ConnectCoreV1PostNamespacedPodPortforwardResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1PostNamespacedPodProxy
 
-#[derive(Debug)]
-pub enum ConnectCoreV1PostNamespacedPodProxyResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect POST requests to proxy of Pod
-    pub fn connect_core_v1_post_namespaced_pod_proxy<C>(
-        __client: &C,
+    pub fn connect_core_v1_post_namespaced_pod_proxy(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // Path is the URL path to use for the current proxy request to pod.
         path: Option<&str>,
-    ) -> Result<ConnectCoreV1PostNamespacedPodProxyResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(path) = path {
-                __query_pairs.append_pair("path", &path);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(path) = path {
+            __query_pairs.append_pair("path", &path);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.post(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1PostNamespacedPodProxyResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1PostNamespacedPodProxyResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1PostNamespacedPodProxyResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PostNamespacedPodProxyResponse::Unauthorized(response),
-            other => ConnectCoreV1PostNamespacedPodProxyResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PostNamespacedPodProxyResponse::Unauthorized,
+            _ => ConnectCoreV1PostNamespacedPodProxyResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1PostNamespacedPodProxyWithPath
 
-#[derive(Debug)]
-pub enum ConnectCoreV1PostNamespacedPodProxyWithPathResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect POST requests to proxy of Pod
-    pub fn connect_core_v1_post_namespaced_pod_proxy_with_path<C>(
-        __client: &C,
+    pub fn connect_core_v1_post_namespaced_pod_proxy_with_path(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -697,86 +806,104 @@ impl Pod {
         path: &str,
         // Path is the URL path to use for the current proxy request to pod.
         path_: Option<&str>,
-    ) -> Result<ConnectCoreV1PostNamespacedPodProxyWithPathResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy/{path}", name = name, namespace = namespace, path = path)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(path_) = path_ {
-                __query_pairs.append_pair("path", &path_);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy/{path}?", name = name, namespace = namespace, path = path);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(path_) = path_ {
+            __query_pairs.append_pair("path", &path_);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.post(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1PostNamespacedPodProxyWithPathResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1PostNamespacedPodProxyWithPathResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1PostNamespacedPodProxyWithPathResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PostNamespacedPodProxyWithPathResponse::Unauthorized(response),
-            other => ConnectCoreV1PostNamespacedPodProxyWithPathResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PostNamespacedPodProxyWithPathResponse::Unauthorized,
+            _ => ConnectCoreV1PostNamespacedPodProxyWithPathResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1PutNamespacedPodProxy
 
-#[derive(Debug)]
-pub enum ConnectCoreV1PutNamespacedPodProxyResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect PUT requests to proxy of Pod
-    pub fn connect_core_v1_put_namespaced_pod_proxy<C>(
-        __client: &C,
+    pub fn connect_core_v1_put_namespaced_pod_proxy(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // Path is the URL path to use for the current proxy request to pod.
         path: Option<&str>,
-    ) -> Result<ConnectCoreV1PutNamespacedPodProxyResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(path) = path {
-                __query_pairs.append_pair("path", &path);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(path) = path {
+            __query_pairs.append_pair("path", &path);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.put(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::put(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1PutNamespacedPodProxyResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1PutNamespacedPodProxyResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1PutNamespacedPodProxyResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PutNamespacedPodProxyResponse::Unauthorized(response),
-            other => ConnectCoreV1PutNamespacedPodProxyResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PutNamespacedPodProxyResponse::Unauthorized,
+            _ => ConnectCoreV1PutNamespacedPodProxyResponse::Other,
         })
     }
 }
 
 // Generated from operation connectCoreV1PutNamespacedPodProxyWithPath
 
-#[derive(Debug)]
-pub enum ConnectCoreV1PutNamespacedPodProxyWithPathResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// connect PUT requests to proxy of Pod
-    pub fn connect_core_v1_put_namespaced_pod_proxy_with_path<C>(
-        __client: &C,
+    pub fn connect_core_v1_put_namespaced_pod_proxy_with_path(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -785,83 +912,100 @@ impl Pod {
         path: &str,
         // Path is the URL path to use for the current proxy request to pod.
         path_: Option<&str>,
-    ) -> Result<ConnectCoreV1PutNamespacedPodProxyWithPathResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy/{path}", name = name, namespace = namespace, path = path)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(path_) = path_ {
-                __query_pairs.append_pair("path", &path_);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/proxy/{path}?", name = name, namespace = namespace, path = path);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(path_) = path_ {
+            __query_pairs.append_pair("path", &path_);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.put(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::put(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ConnectCoreV1PutNamespacedPodProxyWithPathResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ConnectCoreV1PutNamespacedPodProxyWithPathResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ConnectCoreV1PutNamespacedPodProxyWithPathResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PutNamespacedPodProxyWithPathResponse::Unauthorized(response),
-            other => ConnectCoreV1PutNamespacedPodProxyWithPathResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ConnectCoreV1PutNamespacedPodProxyWithPathResponse::Unauthorized,
+            _ => ConnectCoreV1PutNamespacedPodProxyWithPathResponse::Other,
         })
     }
 }
 
 // Generated from operation createCoreV1NamespacedPod
 
-#[derive(Debug)]
-pub enum CreateCoreV1NamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// create a Pod
-    pub fn create_core_v1_namespaced_pod<C>(
-        __client: &C,
+    pub fn create_core_v1_namespaced_pod(
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         body: &::v1_7::kubernetes::pkg::api::v1::Pod,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<CreateCoreV1NamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods", namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods?", namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.post(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum CreateCoreV1NamespacedPodResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for CreateCoreV1NamespacedPodResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 CreateCoreV1NamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => CreateCoreV1NamespacedPodResponse::Unauthorized(response),
-            other => CreateCoreV1NamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => CreateCoreV1NamespacedPodResponse::Unauthorized,
+            _ => CreateCoreV1NamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation deleteCoreV1CollectionNamespacedPod
 
-#[derive(Debug)]
-pub enum DeleteCoreV1CollectionNamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::Status),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// delete collection of Pod
-    pub fn delete_core_v1_collection_namespaced_pod<C>(
-        __client: &C,
+    pub fn delete_core_v1_collection_namespaced_pod(
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
@@ -878,59 +1022,67 @@ impl Pod {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<DeleteCoreV1CollectionNamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods", namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods?", namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.delete(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::delete(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum DeleteCoreV1CollectionNamespacedPodResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::Status),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for DeleteCoreV1CollectionNamespacedPodResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 DeleteCoreV1CollectionNamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => DeleteCoreV1CollectionNamespacedPodResponse::Unauthorized(response),
-            other => DeleteCoreV1CollectionNamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => DeleteCoreV1CollectionNamespacedPodResponse::Unauthorized,
+            _ => DeleteCoreV1CollectionNamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation deleteCoreV1NamespacedPod
 
-#[derive(Debug)]
-pub enum DeleteCoreV1NamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::Status),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// delete a Pod
-    pub fn delete_core_v1_namespaced_pod<C>(
-        __client: &C,
+    pub fn delete_core_v1_namespaced_pod(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -943,50 +1095,58 @@ impl Pod {
         pretty: Option<&str>,
         // Whether and how garbage collection will be performed. Either this field or OrphanDependents may be set, but not both. The default policy is decided by the existing finalizer set in the metadata.finalizers and the resource-specific default policy.
         propagation_policy: Option<&str>,
-    ) -> Result<DeleteCoreV1NamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(grace_period_seconds) = grace_period_seconds {
-                __query_pairs.append_pair("gracePeriodSeconds", &grace_period_seconds.to_string());
-            }
-            if let Some(orphan_dependents) = orphan_dependents {
-                __query_pairs.append_pair("orphanDependents", &orphan_dependents.to_string());
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(propagation_policy) = propagation_policy {
-                __query_pairs.append_pair("propagationPolicy", &propagation_policy);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(grace_period_seconds) = grace_period_seconds {
+            __query_pairs.append_pair("gracePeriodSeconds", &grace_period_seconds.to_string());
         }
+        if let Some(orphan_dependents) = orphan_dependents {
+            __query_pairs.append_pair("orphanDependents", &orphan_dependents.to_string());
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(propagation_policy) = propagation_policy {
+            __query_pairs.append_pair("propagationPolicy", &propagation_policy);
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.delete(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::delete(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum DeleteCoreV1NamespacedPodResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::Status),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for DeleteCoreV1NamespacedPodResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 DeleteCoreV1NamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => DeleteCoreV1NamespacedPodResponse::Unauthorized(response),
-            other => DeleteCoreV1NamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => DeleteCoreV1NamespacedPodResponse::Unauthorized,
+            _ => DeleteCoreV1NamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation listCoreV1NamespacedPod
 
-#[derive(Debug)]
-pub enum ListCoreV1NamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::PodList),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// list or watch objects of kind Pod
-    pub fn list_core_v1_namespaced_pod<C>(
-        __client: &C,
+    pub fn list_core_v1_namespaced_pod(
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
@@ -1003,59 +1163,67 @@ impl Pod {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<ListCoreV1NamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods", namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods?", namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ListCoreV1NamespacedPodResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::PodList),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ListCoreV1NamespacedPodResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ListCoreV1NamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ListCoreV1NamespacedPodResponse::Unauthorized(response),
-            other => ListCoreV1NamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ListCoreV1NamespacedPodResponse::Unauthorized,
+            _ => ListCoreV1NamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation listCoreV1PodForAllNamespaces
 
-#[derive(Debug)]
-pub enum ListCoreV1PodForAllNamespacesResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::PodList),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// list or watch objects of kind Pod
-    pub fn list_core_v1_pod_for_all_namespaces<C>(
-        __client: &C,
+    pub fn list_core_v1_pod_for_all_namespaces(
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
         field_selector: Option<&str>,
         // If true, partially initialized resources are included in the response.
@@ -1070,59 +1238,67 @@ impl Pod {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<ListCoreV1PodForAllNamespacesResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/pods")).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/pods?");
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ListCoreV1PodForAllNamespacesResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::PodList),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ListCoreV1PodForAllNamespacesResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ListCoreV1PodForAllNamespacesResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ListCoreV1PodForAllNamespacesResponse::Unauthorized(response),
-            other => ListCoreV1PodForAllNamespacesResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ListCoreV1PodForAllNamespacesResponse::Unauthorized,
+            _ => ListCoreV1PodForAllNamespacesResponse::Other,
         })
     }
 }
 
 // Generated from operation patchCoreV1NamespacedPod
 
-#[derive(Debug)]
-pub enum PatchCoreV1NamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// partially update the specified Pod
-    pub fn patch_core_v1_namespaced_pod<C>(
-        __client: &C,
+    pub fn patch_core_v1_namespaced_pod(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -1130,41 +1306,49 @@ impl Pod {
         body: &::v1_7::apimachinery::pkg::apis::meta::v1::Patch,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<PatchCoreV1NamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.patch(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::patch(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum PatchCoreV1NamespacedPodResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for PatchCoreV1NamespacedPodResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 PatchCoreV1NamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => PatchCoreV1NamespacedPodResponse::Unauthorized(response),
-            other => PatchCoreV1NamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => PatchCoreV1NamespacedPodResponse::Unauthorized,
+            _ => PatchCoreV1NamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation patchCoreV1NamespacedPodStatus
 
-#[derive(Debug)]
-pub enum PatchCoreV1NamespacedPodStatusResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// partially update status of the specified Pod
-    pub fn patch_core_v1_namespaced_pod_status<C>(
-        __client: &C,
+    pub fn patch_core_v1_namespaced_pod_status(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -1172,401 +1356,509 @@ impl Pod {
         body: &::v1_7::apimachinery::pkg::apis::meta::v1::Patch,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<PatchCoreV1NamespacedPodStatusResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/status", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/status?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.patch(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::patch(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum PatchCoreV1NamespacedPodStatusResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for PatchCoreV1NamespacedPodStatusResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 PatchCoreV1NamespacedPodStatusResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => PatchCoreV1NamespacedPodStatusResponse::Unauthorized(response),
-            other => PatchCoreV1NamespacedPodStatusResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => PatchCoreV1NamespacedPodStatusResponse::Unauthorized,
+            _ => PatchCoreV1NamespacedPodStatusResponse::Other,
         })
     }
 }
 
 // Generated from operation proxyCoreV1DELETENamespacedPod
 
-#[derive(Debug)]
-pub enum ProxyCoreV1DELETENamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// proxy DELETE requests to Pod
-    pub fn proxy_core_v1_delete_namespaced_pod<C>(
-        __client: &C,
+    pub fn proxy_core_v1_delete_namespaced_pod(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
-    ) -> Result<ProxyCoreV1DELETENamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let __url = __client.base_url().join(&format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace)).map_err(::Error::URL)?;
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace);
 
-        let response = __client.delete(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::delete(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ProxyCoreV1DELETENamespacedPodResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ProxyCoreV1DELETENamespacedPodResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ProxyCoreV1DELETENamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1DELETENamespacedPodResponse::Unauthorized(response),
-            other => ProxyCoreV1DELETENamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1DELETENamespacedPodResponse::Unauthorized,
+            _ => ProxyCoreV1DELETENamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation proxyCoreV1DELETENamespacedPodWithPath
 
-#[derive(Debug)]
-pub enum ProxyCoreV1DELETENamespacedPodWithPathResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// proxy DELETE requests to Pod
-    pub fn proxy_core_v1_delete_namespaced_pod_with_path<C>(
-        __client: &C,
+    pub fn proxy_core_v1_delete_namespaced_pod_with_path(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // path to the resource
         path: &str,
-    ) -> Result<ProxyCoreV1DELETENamespacedPodWithPathResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let __url = __client.base_url().join(&format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}/{path}", name = name, namespace = namespace, path = path)).map_err(::Error::URL)?;
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}/{path}", name = name, namespace = namespace, path = path);
 
-        let response = __client.delete(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::delete(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ProxyCoreV1DELETENamespacedPodWithPathResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ProxyCoreV1DELETENamespacedPodWithPathResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ProxyCoreV1DELETENamespacedPodWithPathResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1DELETENamespacedPodWithPathResponse::Unauthorized(response),
-            other => ProxyCoreV1DELETENamespacedPodWithPathResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1DELETENamespacedPodWithPathResponse::Unauthorized,
+            _ => ProxyCoreV1DELETENamespacedPodWithPathResponse::Other,
         })
     }
 }
 
 // Generated from operation proxyCoreV1GETNamespacedPod
 
-#[derive(Debug)]
-pub enum ProxyCoreV1GETNamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// proxy GET requests to Pod
-    pub fn proxy_core_v1_get_namespaced_pod<C>(
-        __client: &C,
+    pub fn proxy_core_v1_get_namespaced_pod(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
-    ) -> Result<ProxyCoreV1GETNamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let __url = __client.base_url().join(&format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace)).map_err(::Error::URL)?;
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace);
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ProxyCoreV1GETNamespacedPodResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ProxyCoreV1GETNamespacedPodResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ProxyCoreV1GETNamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1GETNamespacedPodResponse::Unauthorized(response),
-            other => ProxyCoreV1GETNamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1GETNamespacedPodResponse::Unauthorized,
+            _ => ProxyCoreV1GETNamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation proxyCoreV1GETNamespacedPodWithPath
 
-#[derive(Debug)]
-pub enum ProxyCoreV1GETNamespacedPodWithPathResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// proxy GET requests to Pod
-    pub fn proxy_core_v1_get_namespaced_pod_with_path<C>(
-        __client: &C,
+    pub fn proxy_core_v1_get_namespaced_pod_with_path(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // path to the resource
         path: &str,
-    ) -> Result<ProxyCoreV1GETNamespacedPodWithPathResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let __url = __client.base_url().join(&format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}/{path}", name = name, namespace = namespace, path = path)).map_err(::Error::URL)?;
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}/{path}", name = name, namespace = namespace, path = path);
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ProxyCoreV1GETNamespacedPodWithPathResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ProxyCoreV1GETNamespacedPodWithPathResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ProxyCoreV1GETNamespacedPodWithPathResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1GETNamespacedPodWithPathResponse::Unauthorized(response),
-            other => ProxyCoreV1GETNamespacedPodWithPathResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1GETNamespacedPodWithPathResponse::Unauthorized,
+            _ => ProxyCoreV1GETNamespacedPodWithPathResponse::Other,
         })
     }
 }
 
 // Generated from operation proxyCoreV1PATCHNamespacedPod
 
-#[derive(Debug)]
-pub enum ProxyCoreV1PATCHNamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// proxy PATCH requests to Pod
-    pub fn proxy_core_v1_patch_namespaced_pod<C>(
-        __client: &C,
+    pub fn proxy_core_v1_patch_namespaced_pod(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
-    ) -> Result<ProxyCoreV1PATCHNamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let __url = __client.base_url().join(&format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace)).map_err(::Error::URL)?;
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace);
 
-        let response = __client.patch(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::patch(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ProxyCoreV1PATCHNamespacedPodResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ProxyCoreV1PATCHNamespacedPodResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ProxyCoreV1PATCHNamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1PATCHNamespacedPodResponse::Unauthorized(response),
-            other => ProxyCoreV1PATCHNamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1PATCHNamespacedPodResponse::Unauthorized,
+            _ => ProxyCoreV1PATCHNamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation proxyCoreV1PATCHNamespacedPodWithPath
 
-#[derive(Debug)]
-pub enum ProxyCoreV1PATCHNamespacedPodWithPathResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// proxy PATCH requests to Pod
-    pub fn proxy_core_v1_patch_namespaced_pod_with_path<C>(
-        __client: &C,
+    pub fn proxy_core_v1_patch_namespaced_pod_with_path(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // path to the resource
         path: &str,
-    ) -> Result<ProxyCoreV1PATCHNamespacedPodWithPathResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let __url = __client.base_url().join(&format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}/{path}", name = name, namespace = namespace, path = path)).map_err(::Error::URL)?;
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}/{path}", name = name, namespace = namespace, path = path);
 
-        let response = __client.patch(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::patch(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ProxyCoreV1PATCHNamespacedPodWithPathResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ProxyCoreV1PATCHNamespacedPodWithPathResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ProxyCoreV1PATCHNamespacedPodWithPathResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1PATCHNamespacedPodWithPathResponse::Unauthorized(response),
-            other => ProxyCoreV1PATCHNamespacedPodWithPathResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1PATCHNamespacedPodWithPathResponse::Unauthorized,
+            _ => ProxyCoreV1PATCHNamespacedPodWithPathResponse::Other,
         })
     }
 }
 
 // Generated from operation proxyCoreV1POSTNamespacedPod
 
-#[derive(Debug)]
-pub enum ProxyCoreV1POSTNamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// proxy POST requests to Pod
-    pub fn proxy_core_v1_post_namespaced_pod<C>(
-        __client: &C,
+    pub fn proxy_core_v1_post_namespaced_pod(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
-    ) -> Result<ProxyCoreV1POSTNamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let __url = __client.base_url().join(&format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace)).map_err(::Error::URL)?;
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace);
 
-        let response = __client.post(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ProxyCoreV1POSTNamespacedPodResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ProxyCoreV1POSTNamespacedPodResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ProxyCoreV1POSTNamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1POSTNamespacedPodResponse::Unauthorized(response),
-            other => ProxyCoreV1POSTNamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1POSTNamespacedPodResponse::Unauthorized,
+            _ => ProxyCoreV1POSTNamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation proxyCoreV1POSTNamespacedPodWithPath
 
-#[derive(Debug)]
-pub enum ProxyCoreV1POSTNamespacedPodWithPathResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// proxy POST requests to Pod
-    pub fn proxy_core_v1_post_namespaced_pod_with_path<C>(
-        __client: &C,
+    pub fn proxy_core_v1_post_namespaced_pod_with_path(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // path to the resource
         path: &str,
-    ) -> Result<ProxyCoreV1POSTNamespacedPodWithPathResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let __url = __client.base_url().join(&format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}/{path}", name = name, namespace = namespace, path = path)).map_err(::Error::URL)?;
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}/{path}", name = name, namespace = namespace, path = path);
 
-        let response = __client.post(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::post(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ProxyCoreV1POSTNamespacedPodWithPathResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ProxyCoreV1POSTNamespacedPodWithPathResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ProxyCoreV1POSTNamespacedPodWithPathResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1POSTNamespacedPodWithPathResponse::Unauthorized(response),
-            other => ProxyCoreV1POSTNamespacedPodWithPathResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1POSTNamespacedPodWithPathResponse::Unauthorized,
+            _ => ProxyCoreV1POSTNamespacedPodWithPathResponse::Other,
         })
     }
 }
 
 // Generated from operation proxyCoreV1PUTNamespacedPod
 
-#[derive(Debug)]
-pub enum ProxyCoreV1PUTNamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// proxy PUT requests to Pod
-    pub fn proxy_core_v1_put_namespaced_pod<C>(
-        __client: &C,
+    pub fn proxy_core_v1_put_namespaced_pod(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
-    ) -> Result<ProxyCoreV1PUTNamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let __url = __client.base_url().join(&format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace)).map_err(::Error::URL)?;
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace);
 
-        let response = __client.put(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::put(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ProxyCoreV1PUTNamespacedPodResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ProxyCoreV1PUTNamespacedPodResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ProxyCoreV1PUTNamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1PUTNamespacedPodResponse::Unauthorized(response),
-            other => ProxyCoreV1PUTNamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1PUTNamespacedPodResponse::Unauthorized,
+            _ => ProxyCoreV1PUTNamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation proxyCoreV1PUTNamespacedPodWithPath
 
-#[derive(Debug)]
-pub enum ProxyCoreV1PUTNamespacedPodWithPathResponse<R> where R: ::std::io::Read {
-    Ok(String),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// proxy PUT requests to Pod
-    pub fn proxy_core_v1_put_namespaced_pod_with_path<C>(
-        __client: &C,
+    pub fn proxy_core_v1_put_namespaced_pod_with_path(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // path to the resource
         path: &str,
-    ) -> Result<ProxyCoreV1PUTNamespacedPodWithPathResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let __url = __client.base_url().join(&format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}/{path}", name = name, namespace = namespace, path = path)).map_err(::Error::URL)?;
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/proxy/namespaces/{namespace}/pods/{name}/{path}", name = name, namespace = namespace, path = path);
 
-        let response = __client.put(__url, &()).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::put(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ProxyCoreV1PUTNamespacedPodWithPathResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ProxyCoreV1PUTNamespacedPodWithPathResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let mut response = response;
-                let mut result = String::new();
-                ::std::io::Read::read_to_string(&mut response, &mut result).map_err(::Error::IO)?;
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ProxyCoreV1PUTNamespacedPodWithPathResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1PUTNamespacedPodWithPathResponse::Unauthorized(response),
-            other => ProxyCoreV1PUTNamespacedPodWithPathResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ProxyCoreV1PUTNamespacedPodWithPathResponse::Unauthorized,
+            _ => ProxyCoreV1PUTNamespacedPodWithPathResponse::Other,
         })
     }
 }
 
 // Generated from operation readCoreV1NamespacedPod
 
-#[derive(Debug)]
-pub enum ReadCoreV1NamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// read the specified Pod
-    pub fn read_core_v1_namespaced_pod<C>(
-        __client: &C,
+    pub fn read_core_v1_namespaced_pod(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -1577,47 +1869,55 @@ impl Pod {
         export: Option<bool>,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReadCoreV1NamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(exact) = exact {
-                __query_pairs.append_pair("exact", &exact.to_string());
-            }
-            if let Some(export) = export {
-                __query_pairs.append_pair("export", &export.to_string());
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(exact) = exact {
+            __query_pairs.append_pair("exact", &exact.to_string());
         }
+        if let Some(export) = export {
+            __query_pairs.append_pair("export", &export.to_string());
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReadCoreV1NamespacedPodResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReadCoreV1NamespacedPodResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReadCoreV1NamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReadCoreV1NamespacedPodResponse::Unauthorized(response),
-            other => ReadCoreV1NamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReadCoreV1NamespacedPodResponse::Unauthorized,
+            _ => ReadCoreV1NamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation readCoreV1NamespacedPodLog
 
-#[derive(Debug)]
-pub enum ReadCoreV1NamespacedPodLogResponse<R> where R: ::std::io::Read {
-    Ok(::std::io::Lines<::std::io::BufReader<R>>),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// read log of the specified Pod
-    pub fn read_core_v1_namespaced_pod_log<C>(
-        __client: &C,
+    pub fn read_core_v1_namespaced_pod_log(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -1638,103 +1938,122 @@ impl Pod {
         tail_lines: Option<i64>,
         // If true, add an RFC3339 or RFC3339Nano timestamp at the beginning of every line of log output. Defaults to false.
         timestamps: Option<bool>,
-    ) -> Result<ReadCoreV1NamespacedPodLogResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/log", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(container) = container {
-                __query_pairs.append_pair("container", &container);
-            }
-            if let Some(follow) = follow {
-                __query_pairs.append_pair("follow", &follow.to_string());
-            }
-            if let Some(limit_bytes) = limit_bytes {
-                __query_pairs.append_pair("limitBytes", &limit_bytes.to_string());
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(previous) = previous {
-                __query_pairs.append_pair("previous", &previous.to_string());
-            }
-            if let Some(since_seconds) = since_seconds {
-                __query_pairs.append_pair("sinceSeconds", &since_seconds.to_string());
-            }
-            if let Some(tail_lines) = tail_lines {
-                __query_pairs.append_pair("tailLines", &tail_lines.to_string());
-            }
-            if let Some(timestamps) = timestamps {
-                __query_pairs.append_pair("timestamps", &timestamps.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/log?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(container) = container {
+            __query_pairs.append_pair("container", &container);
         }
+        if let Some(follow) = follow {
+            __query_pairs.append_pair("follow", &follow.to_string());
+        }
+        if let Some(limit_bytes) = limit_bytes {
+            __query_pairs.append_pair("limitBytes", &limit_bytes.to_string());
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(previous) = previous {
+            __query_pairs.append_pair("previous", &previous.to_string());
+        }
+        if let Some(since_seconds) = since_seconds {
+            __query_pairs.append_pair("sinceSeconds", &since_seconds.to_string());
+        }
+        if let Some(tail_lines) = tail_lines {
+            __query_pairs.append_pair("tailLines", &tail_lines.to_string());
+        }
+        if let Some(timestamps) = timestamps {
+            __query_pairs.append_pair("timestamps", &timestamps.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReadCoreV1NamespacedPodLogResponse<'a> {
+    Ok(&'a str),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReadCoreV1NamespacedPodLogResponse<'a> {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::std::io::BufRead::lines(::std::io::BufReader::new(response));
+                let result = match ::std::str::from_utf8(buf) {
+                    Ok(s) => s,
+                    Err(err) if err.error_len().is_none() => {
+                        let valid_up_to = err.valid_up_to();
+                        unsafe { ::std::str::from_utf8_unchecked(&buf[..valid_up_to]) }
+                    },
+                    Err(err) => return Err(::ResponseError::Utf8(err)),
+                };
                 ReadCoreV1NamespacedPodLogResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReadCoreV1NamespacedPodLogResponse::Unauthorized(response),
-            other => ReadCoreV1NamespacedPodLogResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReadCoreV1NamespacedPodLogResponse::Unauthorized,
+            _ => ReadCoreV1NamespacedPodLogResponse::Other,
         })
     }
 }
 
 // Generated from operation readCoreV1NamespacedPodStatus
 
-#[derive(Debug)]
-pub enum ReadCoreV1NamespacedPodStatusResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// read status of the specified Pod
-    pub fn read_core_v1_namespaced_pod_status<C>(
-        __client: &C,
+    pub fn read_core_v1_namespaced_pod_status(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReadCoreV1NamespacedPodStatusResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/status", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/status?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReadCoreV1NamespacedPodStatusResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReadCoreV1NamespacedPodStatusResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReadCoreV1NamespacedPodStatusResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReadCoreV1NamespacedPodStatusResponse::Unauthorized(response),
-            other => ReadCoreV1NamespacedPodStatusResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReadCoreV1NamespacedPodStatusResponse::Unauthorized,
+            _ => ReadCoreV1NamespacedPodStatusResponse::Other,
         })
     }
 }
 
 // Generated from operation replaceCoreV1NamespacedPod
 
-#[derive(Debug)]
-pub enum ReplaceCoreV1NamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// replace the specified Pod
-    pub fn replace_core_v1_namespaced_pod<C>(
-        __client: &C,
+    pub fn replace_core_v1_namespaced_pod(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -1742,41 +2061,49 @@ impl Pod {
         body: &::v1_7::kubernetes::pkg::api::v1::Pod,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReplaceCoreV1NamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.put(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::put(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReplaceCoreV1NamespacedPodResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReplaceCoreV1NamespacedPodResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReplaceCoreV1NamespacedPodResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReplaceCoreV1NamespacedPodResponse::Unauthorized(response),
-            other => ReplaceCoreV1NamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReplaceCoreV1NamespacedPodResponse::Unauthorized,
+            _ => ReplaceCoreV1NamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation replaceCoreV1NamespacedPodStatus
 
-#[derive(Debug)]
-pub enum ReplaceCoreV1NamespacedPodStatusResponse<R> where R: ::std::io::Read {
-    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// replace status of the specified Pod
-    pub fn replace_core_v1_namespaced_pod_status<C>(
-        __client: &C,
+    pub fn replace_core_v1_namespaced_pod_status(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -1784,40 +2111,49 @@ impl Pod {
         body: &::v1_7::kubernetes::pkg::api::v1::Pod,
         // If 'true', then the output is pretty printed.
         pretty: Option<&str>,
-    ) -> Result<ReplaceCoreV1NamespacedPodStatusResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/namespaces/{namespace}/pods/{name}/status", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/namespaces/{namespace}/pods/{name}/status?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
         }
+        let __url = __query_pairs.finish();
 
-        let response = __client.put(__url, &body).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::put(__url);
+        let __body = ::serde_json::to_vec(&body).map_err(::RequestError::Json)?;
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum ReplaceCoreV1NamespacedPodStatusResponse {
+    Ok(::v1_7::kubernetes::pkg::api::v1::Pod),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for ReplaceCoreV1NamespacedPodStatusResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::from_reader(response).map_err(::Error::JSON)?;
+                let result = match ::serde_json::from_slice(buf) {
+                    Ok(value) => value,
+                    Err(ref err) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Err(err) => return Err(::ResponseError::Json(err)),
+                };
                 ReplaceCoreV1NamespacedPodStatusResponse::Ok(result)
             },
-            ::http::StatusCode::UNAUTHORIZED => ReplaceCoreV1NamespacedPodStatusResponse::Unauthorized(response),
-            other => ReplaceCoreV1NamespacedPodStatusResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => ReplaceCoreV1NamespacedPodStatusResponse::Unauthorized,
+            _ => ReplaceCoreV1NamespacedPodStatusResponse::Other,
         })
     }
 }
 
 // Generated from operation watchCoreV1NamespacedPod
 
-pub enum WatchCoreV1NamespacedPodResponse<R> where R: ::std::io::Read {
-    Ok(::serde_json::StreamDeserializer<'static, ::serde_json::de::IoRead<R>, ::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent>),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// watch changes to an object of kind Pod
-    pub fn watch_core_v1_namespaced_pod<C>(
-        __client: &C,
+    pub fn watch_core_v1_namespaced_pod(
         // name of the Pod
         name: &str,
         // object name and auth scope, such as for teams and projects
@@ -1836,58 +2172,69 @@ impl Pod {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<WatchCoreV1NamespacedPodResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/watch/namespaces/{namespace}/pods/{name}", name = name, namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/watch/namespaces/{namespace}/pods/{name}?", name = name, namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum WatchCoreV1NamespacedPodResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent, usize),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for WatchCoreV1NamespacedPodResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::Deserializer::from_reader(response).into_iter();
-                WatchCoreV1NamespacedPodResponse::Ok(result)
+                let mut deserializer = ::serde_json::Deserializer::from_slice(buf).into_iter();
+                let (result, byte_offset) = match deserializer.next() {
+                    Some(Ok(value)) => (value, deserializer.byte_offset()),
+                    Some(Err(ref err)) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Some(Err(err)) => return Err(::ResponseError::Json(err)),
+                    None => return Err(::ResponseError::NeedMoreData),
+                };
+                WatchCoreV1NamespacedPodResponse::Ok(result, byte_offset)
             },
-            ::http::StatusCode::UNAUTHORIZED => WatchCoreV1NamespacedPodResponse::Unauthorized(response),
-            other => WatchCoreV1NamespacedPodResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => WatchCoreV1NamespacedPodResponse::Unauthorized,
+            _ => WatchCoreV1NamespacedPodResponse::Other,
         })
     }
 }
 
 // Generated from operation watchCoreV1NamespacedPodList
 
-pub enum WatchCoreV1NamespacedPodListResponse<R> where R: ::std::io::Read {
-    Ok(::serde_json::StreamDeserializer<'static, ::serde_json::de::IoRead<R>, ::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent>),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// watch individual changes to a list of Pod
-    pub fn watch_core_v1_namespaced_pod_list<C>(
-        __client: &C,
+    pub fn watch_core_v1_namespaced_pod_list(
         // object name and auth scope, such as for teams and projects
         namespace: &str,
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
@@ -1904,58 +2251,69 @@ impl Pod {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<WatchCoreV1NamespacedPodListResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/watch/namespaces/{namespace}/pods", namespace = namespace)).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/watch/namespaces/{namespace}/pods?", namespace = namespace);
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum WatchCoreV1NamespacedPodListResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent, usize),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for WatchCoreV1NamespacedPodListResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::Deserializer::from_reader(response).into_iter();
-                WatchCoreV1NamespacedPodListResponse::Ok(result)
+                let mut deserializer = ::serde_json::Deserializer::from_slice(buf).into_iter();
+                let (result, byte_offset) = match deserializer.next() {
+                    Some(Ok(value)) => (value, deserializer.byte_offset()),
+                    Some(Err(ref err)) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Some(Err(err)) => return Err(::ResponseError::Json(err)),
+                    None => return Err(::ResponseError::NeedMoreData),
+                };
+                WatchCoreV1NamespacedPodListResponse::Ok(result, byte_offset)
             },
-            ::http::StatusCode::UNAUTHORIZED => WatchCoreV1NamespacedPodListResponse::Unauthorized(response),
-            other => WatchCoreV1NamespacedPodListResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => WatchCoreV1NamespacedPodListResponse::Unauthorized,
+            _ => WatchCoreV1NamespacedPodListResponse::Other,
         })
     }
 }
 
 // Generated from operation watchCoreV1PodListForAllNamespaces
 
-pub enum WatchCoreV1PodListForAllNamespacesResponse<R> where R: ::std::io::Read {
-    Ok(::serde_json::StreamDeserializer<'static, ::serde_json::de::IoRead<R>, ::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent>),
-    Unauthorized(R),
-    Other(::http::StatusCode, R),
-}
-
 impl Pod {
     /// watch individual changes to a list of Pod
-    pub fn watch_core_v1_pod_list_for_all_namespaces<C>(
-        __client: &C,
+    pub fn watch_core_v1_pod_list_for_all_namespaces(
         // A selector to restrict the list of returned objects by their fields. Defaults to everything.
         field_selector: Option<&str>,
         // If true, partially initialized resources are included in the response.
@@ -1970,42 +2328,60 @@ impl Pod {
         timeout_seconds: Option<i64>,
         // Watch for changes to the described resources and return them as a stream of add, update, and remove notifications. Specify resourceVersion.
         watch: Option<bool>,
-    ) -> Result<WatchCoreV1PodListForAllNamespacesResponse<C::Response>, ::Error<C::Error>> where C: ::Client {
-        let mut __url = __client.base_url().join(&format!("/api/v1/watch/pods")).map_err(::Error::URL)?;
-        {
-            let mut __query_pairs = __url.query_pairs_mut();
-            if let Some(field_selector) = field_selector {
-                __query_pairs.append_pair("fieldSelector", &field_selector);
-            }
-            if let Some(include_uninitialized) = include_uninitialized {
-                __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
-            }
-            if let Some(label_selector) = label_selector {
-                __query_pairs.append_pair("labelSelector", &label_selector);
-            }
-            if let Some(pretty) = pretty {
-                __query_pairs.append_pair("pretty", &pretty);
-            }
-            if let Some(resource_version) = resource_version {
-                __query_pairs.append_pair("resourceVersion", &resource_version);
-            }
-            if let Some(timeout_seconds) = timeout_seconds {
-                __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
-            }
-            if let Some(watch) = watch {
-                __query_pairs.append_pair("watch", &watch.to_string());
-            }
+    ) -> Result<::http::Request<Vec<u8>>, ::RequestError> {
+        let __url = format!("/api/v1/watch/pods?");
+        let mut __query_pairs = ::url::form_urlencoded::Serializer::new(__url);
+        if let Some(field_selector) = field_selector {
+            __query_pairs.append_pair("fieldSelector", &field_selector);
         }
+        if let Some(include_uninitialized) = include_uninitialized {
+            __query_pairs.append_pair("includeUninitialized", &include_uninitialized.to_string());
+        }
+        if let Some(label_selector) = label_selector {
+            __query_pairs.append_pair("labelSelector", &label_selector);
+        }
+        if let Some(pretty) = pretty {
+            __query_pairs.append_pair("pretty", &pretty);
+        }
+        if let Some(resource_version) = resource_version {
+            __query_pairs.append_pair("resourceVersion", &resource_version);
+        }
+        if let Some(timeout_seconds) = timeout_seconds {
+            __query_pairs.append_pair("timeoutSeconds", &timeout_seconds.to_string());
+        }
+        if let Some(watch) = watch {
+            __query_pairs.append_pair("watch", &watch.to_string());
+        }
+        let __url = __query_pairs.finish();
 
-        let response = __client.get(__url).map_err(::Error::Client)?;
+        let mut __request = ::http::Request::get(__url);
+        let __body = vec![];
+        __request.body(__body).map_err(::RequestError::Http)
+    }
+}
 
-        Ok(match ::Response::status_code(&response) {
+#[derive(Debug)]
+pub enum WatchCoreV1PodListForAllNamespacesResponse {
+    Ok(::v1_7::apimachinery::pkg::apis::meta::v1::WatchEvent, usize),
+    Unauthorized,
+    Other,
+}
+
+impl<'a> ::Response<'a> for WatchCoreV1PodListForAllNamespacesResponse {
+    fn try_from_slice(status_code: ::http::StatusCode, buf: &'a [u8]) -> Result<Self, ::ResponseError> {
+        Ok(match status_code {
             ::http::StatusCode::OK => {
-                let result = ::serde_json::Deserializer::from_reader(response).into_iter();
-                WatchCoreV1PodListForAllNamespacesResponse::Ok(result)
+                let mut deserializer = ::serde_json::Deserializer::from_slice(buf).into_iter();
+                let (result, byte_offset) = match deserializer.next() {
+                    Some(Ok(value)) => (value, deserializer.byte_offset()),
+                    Some(Err(ref err)) if err.is_eof() => return Err(::ResponseError::NeedMoreData),
+                    Some(Err(err)) => return Err(::ResponseError::Json(err)),
+                    None => return Err(::ResponseError::NeedMoreData),
+                };
+                WatchCoreV1PodListForAllNamespacesResponse::Ok(result, byte_offset)
             },
-            ::http::StatusCode::UNAUTHORIZED => WatchCoreV1PodListForAllNamespacesResponse::Unauthorized(response),
-            other => WatchCoreV1PodListForAllNamespacesResponse::Other(other, response),
+            ::http::StatusCode::UNAUTHORIZED => WatchCoreV1PodListForAllNamespacesResponse::Unauthorized,
+            _ => WatchCoreV1PodListForAllNamespacesResponse::Other,
         })
     }
 }
